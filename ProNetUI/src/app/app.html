@@ -1,0 +1,42 @@
+<div class="main-container">
+
+    <div class="sign-form-container"> 
+        <h1>Sign In</h1>
+        <h3>Enter you info below to sign into your account.</h3>
+        <!-- <div class="form-container"> -->
+        <form #exampleForm="ngForm" (ngSubmit)="onSubmit(exampleForm)" >
+            <div class="flex flex-col">
+                <label for="email">Email</label>
+                <input pInputText type="text" id="email" placeholder="email" name="email" [(ngModel)]="user.email" #email="ngModel" [invalid]="email.invalid && (email.touched || exampleForm.submitted)" required />
+                @if (email.invalid && (email.touched || exampleForm.submitted)) {
+                    <p-message severity="error" size="small" variant="simple">
+                        @if (email.hasError('required')) {
+                            Email is Required
+                        }
+                        @if (email.hasError('email')) {
+                            Please enter a valid email
+                        }
+                    </p-message>
+                }
+            </div>
+            <div class="flex flex-col" >
+                <label for="password">Password</label>
+                <input pInputText type="password" id="password" name="password" placeholder="***************" [(ngModel)]="user.Password" #Password="ngModel" required Password [invalid]="Password.invalid && (Password.touched || exampleForm.submitted)" />
+                @if (Password.invalid && (Password.touched || exampleForm.submitted)) {
+                    <p-message severity="error" size="small" variant="simple">Password is required</p-message>
+                   
+                }
+            </div>
+            <button pButton severity="secondary" type="submit">Sign In</button>
+        </form>
+        <p>Don't have an account? <a href="" style="color: white; align-items: center; justify-content: center;"> Sign Up</a></p>
+    <!-- </div> -->
+    </div>
+
+    <div class="logo-container">
+        
+        <!-- <img src="../../public/assets/images/pronet-logo.png" alt=""> -->
+    </div>
+
+</div>
+
