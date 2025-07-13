@@ -28,11 +28,14 @@ form{
 } */
 
 form label{
-    font-weight: bold;
-    
-    
+    font-weight: bold;   
 }
 
+.div-input-label{
+    display: flex;
+    flex-direction: column;
+    margin-top: 8px;
+}
 
 button{
    font-weight: bold;
@@ -44,11 +47,17 @@ button{
 
 }
 
+.password-input{
+    width: 100%;
+    margin: 10px 0;
+   
+}
 
 input{
     width: 100%;
     margin: 10px 0;
     padding: 12px;
+   
 }
 
 h1{

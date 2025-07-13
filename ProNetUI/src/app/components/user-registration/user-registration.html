@@ -1,0 +1,62 @@
+<div class="main-container">
+    <div class="sign-form-container">
+        <h1>Sign Up</h1>
+        <h3>Enter you info below to create your account.</h3>
+
+        <form #exampleForm="ngForm" (ngSubmit)="onSubmit(exampleForm)" >
+            <div class="flex flex-col" >
+                <label for="fullName">Full Name</label>
+                <input pInputText type="text" id="fullName" name="fullName" placeholder="Full Name" [(ngModel)]="user.fullName" #fullName="ngModel" required fullName [invalid]="fullName.invalid && (fullName.touched || exampleForm.submitted)" />
+                @if (fullName.invalid && (fullName.touched || exampleForm.submitted)) {
+                    <p-message severity="error" size="small" variant="simple">Full name is required</p-message>
+                   
+                }
+            </div>
+            <div class="div-input-label">
+                <label for="email">Email</label>
+                <input pInputText type="email" id="email" placeholder="email" name="email" [(ngModel)]="user.email" #email="ngModel" [invalid]="email.invalid && (email.touched || exampleForm.submitted)" required />
+                @if (email.invalid && (email.touched || exampleForm.submitted)) {
+                    <p-message severity="error" size="small" variant="simple">
+                        @if (email.hasError('required')) {
+                            Email is Required
+                        }
+                        @if (email.hasError('email')) {
+                            Please enter a valid email
+                        }
+                    </p-message>
+                }
+            </div>
+            <div class="div-input-label" >
+                <label for="password">Password</label>
+                <p-password class="password-input" [inputStyle]="{ 'width': '100%','padding': '12px'}" [toggleMask]="true" type="password" id="password" name="password" placeholder="***************" [(ngModel)]="user.password" #password="ngModel" required password [invalid]="password.invalid && (password.touched || exampleForm.submitted)"/>
+                <!-- <input pInputText type="password" id="password" name="password" placeholder="***************" [(ngModel)]="user.password" #password="ngModel" required password [invalid]="password.invalid && (password.touched || exampleForm.submitted)" /> -->
+                @if (password.invalid && (password.touched || exampleForm.submitted)) {
+                    <p-message severity="error" size="small" variant="simple">Password is required</p-message>
+                   
+                }
+            </div>
+    
+            <div class="div-input-label" >
+                <label for="confirmPassword">Confirm Password</label>
+                <p-password class="password-input" [inputStyle]="{ 'width': '100%','padding': '12px'}" [toggleMask]="true" type="password" id="confirmPassword" name="confirmPassword" placeholder="***************" [(ngModel)]="user.confirmPassword" #confirmPassword="ngModel" required confirmPassword [invalid]="confirmPassword.invalid && (confirmPassword.touched || exampleForm.submitted)" />
+                <!-- <input pInputText type="password" id="confirmPassword" name="confirmPassword" placeholder="***************" [(ngModel)]="user.confirmPassword" #confirmPassword="ngModel" required confirmPassword [invalid]="confirmPassword.invalid && (confirmPassword.touched || exampleForm.submitted)" /> -->
+                @if (confirmPassword.invalid && (confirmPassword.touched || exampleForm.submitted)) {
+                    <p-message severity="error" size="small" variant="simple">Password is required</p-message>
+                   
+                }
+            </div>
+            
+            <button pButton  type="submit">Sign In</button>
+            
+        </form>
+        <p>Already have an account? <a href="/login" style="color: white; align-items: center; justify-content: center;"> Sign In</a></p>
+
+    
+        </div>
+
+    <div class="logo-container">
+            
+        <img src="assets/images/pronet-logo.png" alt="">
+    </div>
+    </div>
+
