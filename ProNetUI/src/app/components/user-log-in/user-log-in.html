@@ -25,7 +25,7 @@
         </p-message>
         }
       </div>
-      <div class="flex flex-col">
+      <div class="div-input-label">
         <label for="password">Password</label>
         <input
           pInputText
@@ -43,7 +43,7 @@
         />
         @if (password.invalid && (password.touched || exampleForm.submitted)) {
         <p-message severity="error" size="small" variant="simple"
-          >Password is required</p-message
+          >Password is Required</p-message
         >
 
         }

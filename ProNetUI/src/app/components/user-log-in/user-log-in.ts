@@ -29,8 +29,7 @@ export class UserLogIn {
   onSubmit(form: any) {
     if (form.valid) {
       // this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Form Submitted', life: 3000 });
-      form.resetForm()
-      console.log(this.userCredential.email, this.userCredential.password)
+      // form.resetForm()
     }
   }
 }
