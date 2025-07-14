@@ -6,7 +6,7 @@ import { MessageService } from 'primeng/api';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { Password } from 'primeng/password';
-import { UserAuth } from '../../classes/user-auth';
+import { UserAuth } from '../../model/user-auth';
 
 @Component({
   selector: 'app-user-log-in',
