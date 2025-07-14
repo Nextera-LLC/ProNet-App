@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -7,7 +7,9 @@ import { MessageService } from 'primeng/api';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { PasswordModule } from 'primeng/password';
-import { UserRegister } from '../../classes/user-register';
+import { User } from '../../model/user';
+import { UserService } from '../../services/user-service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-user-registration',
@@ -15,9 +17,9 @@ import { UserRegister } from '../../classes/user-register';
   templateUrl: './user-registration.html',
   styleUrl: './user-registration.css'
 })
-export class UserRegistration {
+export class UserRegistration implements OnInit{
 
-  user : UserRegister= {
+  user : User= {
     fullName : '',
     email: '',
     password: '',
@@ -25,6 +27,22 @@ export class UserRegistration {
     role: 'user'
   };
 
+  users : User[];
+
+  constructor(private userService : UserService){}
+
+
+  ngOnInit(): void {
+    this.userService.getUsers().subscribe(
+      (response : User[]) =>{
+        this.users = response;
+        console.log(this.users);
+      },
+      (error : HttpErrorResponse)=>{
+        console.error(error.message);
+      }
+    )
+  }
   onSubmit(form: any) {
     if (form.valid) {
         // this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Form Submitted', life: 3000 });
@@ -32,6 +50,8 @@ export class UserRegistration {
           console.log("not thesame")
         }
         // form.resetForm()
+
+
     }
 }
 }
