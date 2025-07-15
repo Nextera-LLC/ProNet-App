@@ -4,6 +4,7 @@ import { UserRegistration } from './components/user-registration/user-registrati
 
 
 export const routes: Routes = [
+    {path:"", component:UserLogIn},
     {path: "login", component: UserLogIn},
     {path: "sign-up", component: UserRegistration}
 
