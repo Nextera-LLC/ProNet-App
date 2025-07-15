@@ -5,13 +5,23 @@
 
         <form #exampleForm="ngForm" (ngSubmit)="onSubmit(exampleForm)" >
             <div class="flex flex-col" >
-                <label for="fullName">Full Name</label>
-                <input pInputText type="text" id="fullName" name="fullName" placeholder="Full Name" [(ngModel)]="user.fullName" #fullName="ngModel" required fullName [invalid]="fullName.invalid && (fullName.touched || exampleForm.submitted)" />
-                @if (fullName.invalid && (fullName.touched || exampleForm.submitted)) {
-                    <p-message severity="error" size="small" variant="simple">Full name is required</p-message>
+                <label for="firstName">First Name</label>
+                <input pInputText type="text" id="firstName" name="firstName" placeholder="First Name" [(ngModel)]="user.firstName" #firstName="ngModel" required firstName [invalid]="firstName.invalid && (firstName.touched || exampleForm.submitted)" />
+                @if (firstName.invalid && (firstName.touched || exampleForm.submitted)) {
+                    <p-message severity="error" size="small" variant="simple">First name is required</p-message>
                    
                 }
             </div>
+
+            <div class="div-input-label" >
+                <label for="lastName">Last Name</label>
+                <input pInputText type="text" id="lastName" name="lastName" placeholder="Last Name" [(ngModel)]="user.lastName" #lastName="ngModel" required lastName [invalid]="lastName.invalid && (lastName.touched || exampleForm.submitted)" />
+                @if (lastName.invalid && (lastName.touched || exampleForm.submitted)) {
+                    <p-message severity="error" size="small" variant="simple">Last name is required</p-message>
+                   
+                }
+            </div>
+
             <div class="div-input-label">
                 <label for="email">Email</label>
                 <input pInputText type="email" id="email" placeholder="email" name="email" [(ngModel)]="user.email" #email="ngModel" [invalid]="email.invalid && (email.touched || exampleForm.submitted)" required />
@@ -44,9 +54,13 @@
                     <p-message severity="error" size="small" variant="simple">Password is required</p-message>
                    
                 }
+
+                @if(doesPasswordMatch == false){
+                    <p-message severity="error" size="small" variant="simple">Passwords dont' match</p-message>
+                }
             </div>
             
-            <button pButton  type="submit">Sign In</button>
+            <button pButton  type="submit">Sign Up</button>
             
         </form>
         <p>Already have an account? <a href="/login" style="color: white; align-items: center; justify-content: center;"> Sign In</a></p>

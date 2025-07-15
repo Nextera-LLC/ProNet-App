@@ -20,15 +20,17 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class UserRegistration implements OnInit{
 
   user : User= {
-    fullName : '',
+    firstName : '',
+    lastName: '',
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'user'
+    role: 'USER'
   };
 
+  doesPasswordMatch = true;
+  registeredUser : User;
   users : User[];
-
   constructor(private userService : UserService){}
 
 
@@ -45,11 +47,27 @@ export class UserRegistration implements OnInit{
   }
   onSubmit(form: any) {
     if (form.valid) {
-        // this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Form Submitted', life: 3000 });
+      //check if passwords match
         if(this.user.password !== this.user.confirmPassword){
-          console.log("not thesame")
+          this.doesPasswordMatch =false;
         }
-        // form.resetForm()
+        else{
+          this.doesPasswordMatch = true;
+
+        // sending post request to register user
+        this.userService.registerUser(this.user).subscribe(
+          (response : User)=>{
+            this.registeredUser = response;
+            alert("Your account created successfully!")
+          },
+          (error : HttpErrorResponse) =>{
+            alert(error.message);
+          }
+        )
+
+      }
+    
+    
 
 
     }
