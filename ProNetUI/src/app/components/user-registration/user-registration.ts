@@ -1,15 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
-import { MessageService } from 'primeng/api';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { PasswordModule } from 'primeng/password';
 import { User } from '../../model/user';
 import { UserService } from '../../services/user-service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { RegisterRequest } from '../../dto/register-request';
 
 @Component({
   selector: 'app-user-registration',
@@ -19,7 +18,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class UserRegistration implements OnInit{
 
-  user : User= {
+  user : RegisterRequest= {
     firstName : '',
     lastName: '',
     email: '',

@@ -3,6 +3,9 @@ import { environment } from '../../environments/environments';
 import { HttpClient } from '@angular/common/http';
 import { User} from '../model/user';
 import { Observable } from 'rxjs';
+import { RegisterRequest } from '../dto/register-request';
+import { LoginRequest } from '../dto/login-request';
+import { Jwt } from '../dto/jwt';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +21,11 @@ export class UserService {
     return this.http.get<User[]>(`${this.BASE_URL}/user/all`);
   } 
 
-  registerUser(user : User) : Observable<User>{
-    return this.http.post<User>(`${this.BASE_URL}/user`,user);
+  registerUser(user : RegisterRequest) : Observable<User>{
+    return this.http.post<User>(`${this.BASE_URL}/auth/register`,user);
+  }
+
+  logInUser(userCredential : LoginRequest) : Observable<Jwt>{
+    return this.http.post<Jwt>(`${this.BASE_URL}/auth/login`,userCredential);
   }
 }

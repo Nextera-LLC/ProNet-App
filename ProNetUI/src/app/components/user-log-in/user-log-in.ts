@@ -7,6 +7,10 @@ import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { Password } from 'primeng/password';
 import { UserAuth } from '../../model/user-auth';
+import { LoginRequest } from '../../dto/login-request';
+import { UserService } from '../../services/user-service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Jwt } from '../../dto/jwt';
 
 @Component({
   selector: 'app-user-log-in',
@@ -22,14 +26,28 @@ import { UserAuth } from '../../model/user-auth';
 })
 export class UserLogIn {
   
-  userCredential : UserAuth = {
+  jwt : Jwt;
+
+  userCredential : LoginRequest = {
     email : '',
     password : ''
   }
+
+  constructor(private userService : UserService){}
+
   onSubmit(form: any) {
     if (form.valid) {
-      // this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Form Submitted', life: 3000 });
-      // form.resetForm()
+      this.userService.logInUser(this.userCredential).subscribe(
+        (response : any)=>{
+          this.jwt = response;
+          localStorage.setItem("JwtToken",this.jwt.token);
+          
+          alert("Log in successfully!")
+        },
+        (error : HttpErrorResponse) =>{
+          alert(error.message);
+        }
+      )
     }
   }
 }
