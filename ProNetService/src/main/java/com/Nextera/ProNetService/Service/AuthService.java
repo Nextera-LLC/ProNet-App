@@ -2,6 +2,7 @@ package com.Nextera.ProNetService.Service;
 
 import com.Nextera.ProNetService.Model.User;
 import com.Nextera.ProNetService.Repository.UserRepository;
+import com.Nextera.ProNetService.dto.JwtDto;
 import com.Nextera.ProNetService.dto.LoginRequest;
 import com.Nextera.ProNetService.dto.RegisterRequest;
 import com.Nextera.ProNetService.util.Jwt;
@@ -15,18 +16,18 @@ public class AuthService {
     @Autowired private Jwt jwtUtil;
     @Autowired private PasswordEncoder passwordEncoder;
 
-    public String register(RegisterRequest request){
+    public User register(RegisterRequest request){
         User user = new User();
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole("USER");
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
-        user.setConfirmedPassword(request.getConfirmPassword());
-        userRepo.save(user);
-        return "User registered !";
+//        user.setConfirmedPassword(request.getConfirmPassword());
+
+        return userRepo.save(user);
     }
-    public String login(LoginRequest loginRequest) {
+    public JwtDto login(LoginRequest loginRequest) {
         // AuthService.java
         User user = userRepo.findByEmail(loginRequest.getEmail())
                     .orElseThrow(() -> new RuntimeException("User not found"));
@@ -35,6 +36,8 @@ public class AuthService {
                 throw new RuntimeException("Invalid credentials");
             }
 
-            return "Login successful!";
+        JwtDto jwt = new JwtDto();
+            jwt.setToken(jwtUtil.generateToken(loginRequest.getEmail()));
+            return jwt;
         }
     }
