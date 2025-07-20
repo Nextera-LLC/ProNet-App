@@ -11,7 +11,7 @@ import { LoginRequest } from '../../dto/login-request';
 import { UserService } from '../../services/user-service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Jwt } from '../../dto/jwt';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-user-log-in',
   imports: [
@@ -25,7 +25,7 @@ import { Jwt } from '../../dto/jwt';
   styleUrl: './user-log-in.css',
 })
 export class UserLogIn {
-  
+
   jwt : Jwt;
 
   userCredential : LoginRequest = {
@@ -33,7 +33,7 @@ export class UserLogIn {
     password : ''
   }
 
-  constructor(private userService : UserService){}
+  constructor(private userService : UserService, private router : Router){}
 
   onSubmit(form: any) {
     if (form.valid) {
@@ -41,11 +41,10 @@ export class UserLogIn {
         (response : any)=>{
           this.jwt = response;
           localStorage.setItem("JwtToken",this.jwt.token);
-          
-          alert("Log in successfully!")
+            this.router.navigate(['/home']);
         },
         (error : HttpErrorResponse) =>{
-          alert(error.message);
+          alert(error.error.message);
         }
       )
     }
