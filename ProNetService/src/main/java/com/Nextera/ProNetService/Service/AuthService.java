@@ -10,31 +10,39 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class AuthService {
     @Autowired private UserRepository userRepo;
     @Autowired private Jwt jwtUtil;
     @Autowired private PasswordEncoder passwordEncoder;
 
-    public User register(RegisterRequest request){
-        User user = new User();
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole("USER");
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
+    public User register(RegisterRequest request) {
+        if (!userRepo.findByEmail(request.getEmail()).isEmpty()) {
+            throw new RuntimeException("User already exists with this email, Please try with new Email");
+
+        } else {
+            User user = new User();
+            user.setEmail(request.getEmail());
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+            user.setRole("USER");
+            user.setFirstName(request.getFirstName());
+            user.setLastName(request.getLastName());
 //        user.setConfirmedPassword(request.getConfirmPassword());
 
-        return userRepo.save(user);
+            return userRepo.save(user);
+        }
     }
     public JwtDto login(LoginRequest loginRequest) {
-        // AuthService.java
-        User user = userRepo.findByEmail(loginRequest.getEmail())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+        // Try to find the user by email
+        Optional<User> userOptional = userRepo.findByEmail(loginRequest.getEmail());
 
-            if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-                throw new RuntimeException("Invalid credentials");
-            }
+        // If user not found or password doesn't match, throw error
+        if (userOptional.isEmpty() ||
+                !passwordEncoder.matches(loginRequest.getPassword(), userOptional.get().getPassword())) {
+            throw new RuntimeException("Invalid credentials");
+        }
 
         JwtDto jwt = new JwtDto();
             jwt.setToken(jwtUtil.generateToken(loginRequest.getEmail()));
