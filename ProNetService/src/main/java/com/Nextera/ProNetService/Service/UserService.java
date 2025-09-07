@@ -17,9 +17,9 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public User createUser(User user){
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+    public User getCurrentUserInfo(String email){
+        userRepository.findByEmail(email);
+        return userRepository.findByEmail(email).get();
     }
 
     public List<User> getAllUsers() {

@@ -28,4 +28,8 @@ export class UserService {
   logInUser(userCredential : LoginRequest) : Observable<Jwt>{
     return this.http.post<Jwt>(`${this.BASE_URL}/auth/login`,userCredential);
   }
+
+  getCurrentUser() : Observable<User>{
+    return this.http.get<User>(`${this.BASE_URL}/user/current`)
+  }
 }

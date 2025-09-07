@@ -5,7 +5,7 @@ import com.Nextera.ProNetService.Repository.UserRepository;
 import com.Nextera.ProNetService.dto.JwtDto;
 import com.Nextera.ProNetService.dto.LoginRequest;
 import com.Nextera.ProNetService.dto.RegisterRequest;
-import com.Nextera.ProNetService.util.Jwt;
+import com.Nextera.ProNetService.util.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,8 @@ import java.util.Optional;
 @Service
 public class AuthService {
     @Autowired private UserRepository userRepo;
-    @Autowired private Jwt jwtUtil;
+//    @Autowired private Jwt jwtUtil;
+    @Autowired private JwtService jwtService;
     @Autowired private PasswordEncoder passwordEncoder;
 
     public User register(RegisterRequest request) {
@@ -29,7 +30,6 @@ public class AuthService {
             user.setRole("USER");
             user.setFirstName(request.getFirstName());
             user.setLastName(request.getLastName());
-//        user.setConfirmedPassword(request.getConfirmPassword());
 
             return userRepo.save(user);
         }
@@ -45,7 +45,7 @@ public class AuthService {
         }
 
         JwtDto jwt = new JwtDto();
-            jwt.setToken(jwtUtil.generateToken(loginRequest.getEmail()));
+            jwt.setToken(jwtService.generateToken(loginRequest.getEmail()));
             return jwt;
         }
     }
