@@ -9,6 +9,7 @@ import { User } from '../../model/user';
 import { UserService } from '../../services/user-service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RegisterRequest } from '../../dto/register-request';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-registration',
@@ -30,7 +31,7 @@ export class UserRegistration implements OnInit{
   doesPasswordMatch = true;
   registeredUser : User;
   users : User[];
-  constructor(private userService : UserService){}
+  constructor(private userService : UserService, private router : Router){}
 
 
   ngOnInit(): void {
@@ -57,16 +58,18 @@ export class UserRegistration implements OnInit{
         this.userService.registerUser(this.user).subscribe(
           (response : User)=>{
             this.registeredUser = response;
-            alert("Your account created successfully!")
+            this.router.navigate(['/home']);
+
           },
           (error : HttpErrorResponse) =>{
-            alert(error.message);
+           alert(error.error.message);
+//console.log(error);
           }
         )
 
       }
-    
-    
+
+
 
 
     }
