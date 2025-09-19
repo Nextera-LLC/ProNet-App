@@ -1,0 +1,242 @@
+<main class="container">
+    <!-- Profile Header -->
+    <section class="card profile-header" aria-label="Profile header">
+      <div class="banner" role="img" aria-label="Cover image"></div>
+      <div class="header-inner">
+        <img class="avatar" src="assets/images/profile-pic.jpg" alt="Profile avatar" />
+        <div class="identity">
+          <div class="name">Umer Abubeker</div>
+          <div class="headline">Software Engineer · Angular • Spring Boot • Postgres</div>
+          <div class="location">Minneapolis–Saint Paul, Minnesota</div>
+        </div>
+        <div class="actions" aria-label="Profile actions">
+          <button class="btn primary">Connect</button>
+          <button class="btn primary">Message</button>
+          <button class="btn primary">More ▾</button>
+        </div>
+      </div>
+    </section>
+  
+    <!-- About -->
+    <section class="card" aria-labelledby="about-title">
+      <header class="card-header">
+        <h2 id="about-title" class="title">About</h2>
+      </header>
+      <div class="card-body">
+        <p class="muted" [style.maxHeight]="isExpanded ? 'none' : '4.5em'"
+        style="overflow: hidden; text-overflow: ellipsis;">
+       {{ aboutText }}
+     </p>
+     <a (click)="isExpanded = !isExpanded" style="color: var(--primary); cursor: pointer; font-weight: 600;">
+       {{ isExpanded ? 'See less' : 'See more…' }}
+     </a>
+        <!-- <p class="muted">
+          Full‑stack engineer building ProNet — a professional networking platform. Passionate about clean architectures, fast UIs, and developer ergonomics.
+        </p> -->
+      </div>
+    </section>
+  
+    <!-- Experience (2 visible + show all) -->
+    <section class="card" aria-labelledby="exp-title">
+      <header class="card-header">
+        <h2 id="exp-title" class="title">Experience</h2>
+      </header>
+      <div class="card-body">
+        <div class="item entry-editable">
+          <button class="edit-btn" aria-label="Edit experience">
+            ✎
+          </button>
+          <div class="bullet" aria-hidden="true"></div>
+          <div class="meta">
+            <div class="entry-title">Founder & Full‑Stack Developer · ProNet</div>
+            <div class="entry-time">Jan 2025 – Present · Minneapolis, MN</div>
+            <ul class="muted">
+              <li>Architected Angular 20 + Spring Boot with JWT/refresh tokens.</li>
+              <li>Designed profile, feed, and connections UI with reusable components.</li>
+              <li>Optimized PostgreSQL queries with indexes and DTO projections.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="item entry-editable">
+          <button class="edit-btn" aria-label="Edit experience">
+            ✎
+          </button>
+          <div class="bullet" aria-hidden="true"></div>
+          <div class="meta">
+            <div class="entry-title">Software Engineer · Innovate Solutions</div>
+            <div class="entry-time">Aug 2022 – Dec 2024 · Eden Prairie, MN</div>
+            <ul class="muted">
+              <li>Architected Angular 20 + Spring Boot with JWT/refresh tokens.</li>
+              <li>Designed profile, feed, and connections UI with reusable components.</li>
+              <li>Optimized PostgreSQL queries with indexes and DTO projections.</li>
+            </ul>          
+          </div>
+        </div>
+        <details class="show-more details-inline">
+          <!-- hidden items render after summary when opened -->
+          <div class="card-body">
+            <div class="item entry-editable">
+              <button class="edit-btn" aria-label="Edit experience">
+                ✎
+              </button>
+              <div class="bullet" aria-hidden="true"></div>
+              <div class="meta">
+                <div class="entry-title">Backend Engineer (Project) · Social Media Blog API</div>
+                <div class="entry-time">2024 – 2025</div>
+                <p class="muted">Implemented authentication, role‑based authorization, and CRUD services.</p>
+              </div>
+            </div>
+          </div>
+          <summary><span class="label-more">Show all experience(3)</span><span class="label-less">Show less</span></summary>
+        </details>
+      </div>
+    </section>
+  
+    <!-- Education (2 visible + show all) -->
+    <section class="card" aria-labelledby="edu-title">
+      <header class="card-header">
+        <h2 id="edu-title" class="title">Education</h2>
+       
+      </header>
+      <div class="card-body">
+        <div class="item entry-editable">
+          <button class="edit-btn" aria-label="Edit experience">
+            ✎
+          </button>
+          <div class="bullet" aria-hidden="true"></div>
+          <div class="meta">
+            <div class="entry-title">University of Minnesota</div>
+            <div class="entry-sub">B.S. (in progress) – Computer Science</div>
+            <div class="entry-time">2023 – Present</div>
+          </div>
+        </div>
+        <div class="item entry-editable">
+          <button class="edit-btn" aria-label="Edit experience">
+            ✎
+          </button>
+          <div class="bullet" aria-hidden="true"></div>
+          <div class="meta">
+            <div class="entry-title">Coursera</div>
+            <div class="entry-sub">Professional Certificates</div>
+            <div class="entry-time">2021</div>
+          </div>
+        </div>
+        <details class="show-more details-inline">
+          <div class="card-body">
+            <div class="item entry-editable">
+              <button class="edit-btn" aria-label="Edit experience">
+                ✎
+              </button>
+              <div class="bullet" aria-hidden="true"></div>
+              <div class="meta">
+                <div class="entry-title">Community College</div>
+                <div class="entry-sub">A.A. – Liberal Arts</div>
+                <div class="entry-time">2019 – 2021</div>
+              </div>
+            </div>
+          </div>
+          <summary><span class="label-more">Show all education(3)</span><span class="label-less">Show less</span></summary>
+        </details>
+      </div>
+    </section>
+  
+    <!-- Projects (2 visible + show all) -->
+    <section class="card" aria-labelledby="proj-title">
+      <header class="card-header">
+        <h2 id="proj-title" class="title">Projects</h2>
+      </header>
+      <div class="card-body">
+        <div class="item entry-editable">
+          <button class="edit-btn" aria-label="Edit experience">
+            ✎
+          </button>
+          <div class="bullet" aria-hidden="true"></div>
+          <div class="meta">
+            <div class="entry-title">ProNet – Networking Platform</div>
+            <p class="muted">LinkedIn‑style social networking app for professionals.</p>
+            <p><a href="#" aria-label="Open GitHub for ProNet">GitHub ↗</a></p>
+          </div>
+        </div>
+        <div class="item entry-editable">
+          <button class="edit-btn" aria-label="Edit experience">
+            ✎
+          </button>
+          <div class="bullet" aria-hidden="true"></div>
+          <div class="meta">
+            <div class="entry-title">Task ManagemApp</div>
+            <p class="muted">Tasks, reminders, and analytics dashboard.</p>
+            <p><a href="#">Live demo ↗</a></p>
+          </div>
+        </div>
+        <details class="show-more details-inline">
+          <div class="card-body">
+            <div class="item entry-editable">
+              <button class="edit-btn" aria-label="Edit experience">
+                ✎
+              </button>
+              <div class="bullet" aria-hidden="true"></div>
+              <div class="meta">
+                <div class="entry-title">JWT Auth for SPA + API</div>
+                <p class="muted">Reference implementation of access/refresh tokens & CSRF.</p>
+              </div>
+            </div>
+            <div class="item entry-editable">
+              <button class="edit-btn" aria-label="Edit experience">
+                ✎
+              </button>
+              <div class="bullet" aria-hidden="true"></div>
+              <div class="meta">
+                <div class="entry-title">Portfolio Site</div>
+                <p class="muted">Netlify + custom domain; responsive UI.</p>
+              </div>
+            </div>
+            <div class="item entry-editable">
+              <button class="edit-btn" aria-label="Edit experience">
+                ✎
+              </button>
+              <div class="bullet" aria-hidden="true"></div>
+              <div class="meta">
+                <div class="entry-title">Blog API</div>
+                <p class="muted">Spring Boot CRUD + JWT; Postgres.</p>
+              </div>
+            </div>
+          </div>
+          <summary><span class="label-more">Show all projects(5)</span><span class="label-less">Show less</span></summary>
+
+        </details>
+      </div>
+    </section>
+  
+    <!-- Skills (chips + show all) -->
+    <section class="card" aria-labelledby="skills-title">
+      <header class="card-header entry-editable">
+        <h2 id="skills-title" class="title">Skills</h2>
+          <button class="edit-btn" aria-label="Edit experience">
+            ✎
+          </button>
+      </header>
+      <div class="card-body">
+        <div class="skills">
+          <span class="chip">Angular</span>
+          <span class="chip">TypeScript</span>
+          <span class="chip">Spring Boot</span>
+          <span class="chip">PostgreSQL</span>
+        </div>
+        <details class="show-more details-inline">
+          <div class="card-body">
+            <div class="skills">
+              <span class="chip">PrimeNG</span>
+              <span class="chip">JWT</span>
+              <span class="chip">REST APIs</span>
+              <span class="chip">Docker</span>
+              <span class="chip">Git</span>
+              <span class="chip">CI/CD</span>
+            </div>
+          </div>
+          <summary><span class="label-more">Show all skills(10)</span><span class="label-less">Show less</span></summary>
+  
+        </details>
+      </div>
+    </section>
+  </main>
+  

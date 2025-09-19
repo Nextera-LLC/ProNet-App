@@ -1,25 +1,105 @@
-.main-container{
-    display: flex;
-    flex-direction: row;
-    height: 100%;
+/* Header */
+.header {
+  background-color: #ffffff;
+  padding: 7px 8px;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 0.5px solid #b6b5b5;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 10;
 }
 
-.sign-form-container{
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.pronet-logo {
+  font-size: 23px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.sign-form-container p{
-    padding: 5px;
+.pro {
+  color: #004b7c; /* Navy Blue */
 }
 
-form{
-    display: flex;
-    flex-direction: column;
-    width: 60%;
+.net {
+  color: #ff7f66; /* Coral / Light Orange */
+}
+
+.search-bar {
+  /* flex: 1; */
+  width: 50%;
+  padding: 10px 10px;
+  border-radius: 15px;
+  font-size: 14px;
+  border: 1.2px solid rgb(70, 82, 112);
+  outline: none;
+  box-shadow: none;
+  background-color: rgb(226, 226, 226);
+  color: black;
+}
+
+.header-icons {
+  width: 47%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--muted);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.nav-item:hover {
+  color: black;
+}
+
+.nav-item i {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.nav-item span {
+  font-size: 14px;
+}
+
+.search-bar-container {
+  display: flex;
+  flex-direction: row;
+  width: 70%;
+  justify-content: space-between;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.sign-form-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.sign-form-container p {
+  padding: 5px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
 }
 
 /* form{
@@ -27,48 +107,41 @@ form{
     flex-direction: column;
 } */
 
-form label{
-    font-weight: bold;
-    
-    
+form label {
+  font-weight: bold;
 }
 
-
-button{
-   font-weight: bold;
-   padding: 13px 10px;
-   width: 70%;
-   margin-top: 10px;
-   margin-left: 15%;
+button {
+  font-weight: bold;
+  padding: 13px 10px;
+  width: 70%;
+  margin-top: 10px;
+  margin-left: 15%;
   border: none;
-
 }
 
-
-input{
+/* input{
     width: 100%;
     margin: 10px 0;
     padding: 12px;
+} */
+
+h1 {
+  font-size: 50px;
+  margin-bottom: 5px;
 }
 
-h1{
-    font-size: 50px;
-    margin-bottom: 5px;
+h3 {
+  margin-top: 10px;
+  margin-bottom: 30px;
 }
 
-h3{
-
-    margin-top: 10px;
-    margin-bottom: 30px;
+.logo-container {
+  width: 100%;
+  background-color: bisque;
 }
 
-
-.logo-container{
-    width: 100%;
-    background-color:bisque;
-}
-
-img{
-    width: 100%;
-    object-fit: contain;
+img {
+  width: 100%;
+  object-fit: contain;
 }
