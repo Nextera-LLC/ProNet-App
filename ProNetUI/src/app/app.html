@@ -1,3 +1,35 @@
+@if (!isAuthRoute()){
+  <header class="header">
+  <div class="pronet-logo">
+    <span class="pro">Pro</span><span class="net">Net</span>
+  </div>
+  <div class="search-bar-container">
+    <input type="text" placeholder="Search..." class="search-bar"/>
+    <nav class="header-icons">
+      <a href="/home" class="nav-item">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </a>
+      <a class="nav-item">
+        <i class="fas fa-envelope"></i>
+        <span>Messages</span>
+      </a>
+      <a class="nav-item">
+        <i class="fas fa-users"></i>
+        <span>My Networks</span>
+      </a>
+      <a class="nav-item">
+        <i class="fas fa-bell"></i>
+        <span>Notifications</span>
+      </a>
+      <a href="/profile" class="nav-item">
+        <i class="fas fa-user-circle"></i>
+        <span>My Profile</span>
+      </a>
+    </nav>
+  </div>
+  </header>
+}
 
 <router-outlet></router-outlet>
 

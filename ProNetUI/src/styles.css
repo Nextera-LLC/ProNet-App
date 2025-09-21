@@ -2,8 +2,7 @@
 body{
     height: 100vh;
     font-family: Arial, Helvetica, sans-serif;
-    overflow-y: hidden;
-    background-color: rgb(229, 229, 229);
+    background-color: rgb(243, 243, 243);
     margin: 0;
     color: black;
 }
@@ -11,3 +10,17 @@ body{
 p{
     margin: 0;
 }
+
+/* ===== Design Tokens ===== */
+:root{
+    --bg:#f6f7f9; --surface:#ffffff; --text:#e5e7eb; --muted:#6c7382; --border:#e5e7eb;
+    --primary:#0073b1; --primary-600:#1d4ed8; --shadow:0 5px 10px rgba(0,0,0,.03);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#f6f7f9; --surface:#ffffff; --text:#e5e7eb; --muted:#6c7382; --border:#e5e7eb;
+      --primary:#0073b1; --primary-600:#3b82f6; --shadow:0 5px 10px rgba(0,0,0,.03);
+    }
+  }
+  
+  
