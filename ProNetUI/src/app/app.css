@@ -76,6 +76,7 @@
   flex-direction: row;
   width: 70%;
   justify-content: space-between;
+  min-width: 0;
 }
 
 .main-container {

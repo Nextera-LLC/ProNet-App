@@ -1,0 +1,41 @@
+/* ===== profile page Layout ===== */
+.container{max-width:980px;margin:0 auto;padding:16px;line-height: 1.6;padding-top: 70px;
+}
+
+
+/* ===== List Entries ===== */
+.item{display:flex;gap:12px}
+.item + .item{margin-top:16px}
+.item .bullet{width:10px;height:10px;border-radius:3px;background:var(--primary);margin-top:8px;flex:0 0 auto}
+.item .meta{flex:1}
+.entry-title{font-weight:700}
+.entry-sub{color:var(--muted)}
+.entry-time{color:var(--muted);font-size:.9rem;margin-top:2px}
+
+
+/* ===== Skills ===== */
+.skills{display:flex;gap:10px;flex-wrap:wrap}
+.chip{padding:8px 12px;border-radius:999px;border:1px solid var(--border);background:transparent}
+
+
+/* ===== Show All (CSS-only using <details>) ===== */
+details.show-more{margin-top:12px; }
+details.show-more summary{list-style:none; cursor: pointer; color:var(--primary)}
+details.show-more summary::-webkit-details-marker{display:none}
+.show-link{color:var(--primary);cursor:pointer;font-weight:600}
+.label-less{display:none}
+details[open] .label-more{display:none}
+details[open] .label-less{display:inline}
+
+
+
+/* ===== Responsive ===== */
+@media (max-width:900px){.avatar{width:96px;height:96px;top:100px}.identity{padding-left:128px}}
+@media (max-width:640px){
+.banner{height:120px}
+.avatar{position:static;width:84px;height:84px;border:3px solid var(--surface);margin:-42px 0 0 20px}
+.header-inner{flex-direction:column;align-items:flex-start;padding:0 20px 20px}
+.identity{padding-left:0;margin-top:4px}
+.actions{width:100%}
+.actions .btn{flex:1}
+}

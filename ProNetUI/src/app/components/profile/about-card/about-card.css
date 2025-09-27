@@ -1,0 +1,19 @@
+/* ===== profile page Layout ===== */
+.container{max-width:980px;margin:0 auto;padding:16px;line-height: 1.6;padding-top: 70px;
+}
+
+/* ===== Edit icon css ===== */
+.edit-btn {
+  margin-right: 10px;
+
+}
+/* ===== Responsive ===== */
+@media (max-width:900px){.avatar{width:96px;height:96px;top:100px}.identity{padding-left:128px}}
+@media (max-width:640px){
+.banner{height:120px}
+.avatar{position:static;width:84px;height:84px;border:3px solid var(--surface);margin:-42px 0 0 20px}
+.header-inner{flex-direction:column;align-items:flex-start;padding:0 20px 20px}
+.identity{padding-left:0;margin-top:4px}
+.actions{width:100%}
+.actions .btn{flex:1}
+}

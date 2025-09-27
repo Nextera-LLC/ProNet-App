@@ -15,18 +15,18 @@
   
   /* Sidebar */
   .sidebar {
-    /* flex: 0 0 250px; */
     background-color: #fff;
     padding: 10px 20px;
     border-right: 1px solid #ddd;
     display: flex;
     flex-direction: column;
-    /* justify-content: space-between; */
     position: fixed;
     top: 50px;
+    left: 0;
     bottom: 0;
     width: 230px;
-   
+    overflow-y: auto;
+
   }
 
   .upper-links{
@@ -92,10 +92,20 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding:0px 300px;
-    padding-top: 60px;
+    /* padding:0px 300px;
+    padding-top: 60px; */
+    margin-left: 230px;            /* same as .sidebar width */
+    padding: 60px 24px 24px;
   }
   
+  /* @media (min-width: 1200px){
+    .main-content {
+      max-width: 920px;
+      margin-left: 230px;          still offset for sidebar
+      margin-right: auto;          center the feed
+    }
+  } */
+
   /* Create Post */
   .create-post {
     background-color: #fff;
@@ -153,7 +163,8 @@
   
   .post-header {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    /* justify-content: center; */
     gap: 10px;
     margin-bottom: 5px;
   }
@@ -202,5 +213,57 @@
   .post-actions button:hover{
     background-color: rgb(236, 236, 236);
     border-radius: 6px;
+  }
+  
+/* ------ Tablet responsive (<=1024px) ----- */
+  @media (max-width: 1024px){
+    .sidebar { width: 200px; }
+    .main-content { margin-left: 200px; padding: 60px 16px; }
+  
+    /* Header spacing tighter */
+    .header { padding: 7px 12px; }
+    .header-icons { gap: 14px; }
+    .search-bar { width: auto; min-width: 160px; } /* allow it to shrink */
+  }
+  
+  /* ----- Mobile responsive (<= 768 px) -----*/
+  @media (max-width: 767px){
+    /* Sidebar stops being fixed; becomes a top block */
+  /* Hide sidebar completely on phones */
+  .sidebar {
+    display: none;
+  }
+  
+    .main-content {
+      margin-left: 0;              /* no left column on mobile */
+      padding: 60px 12px 24px;
+    }
+  
+    /* Header: search above nav; nav becomes icon-only and spreads */
+    .header { flex-wrap: wrap; row-gap: 8px; }
+    .search-bar-container { width: 100%; gap: 10px; }
+    .header-icons {
+      width: 100%;
+      justify-content: space-between;
+      gap: 10px;
+      order: 2;                    /* nav to next line */
+    }
+    .search-bar { order: 1; flex: 1; width: auto; min-width: 0; }
+    .nav-item span { display: none; }      /* icon only labels */
+    .nav-item i { font-size: 20px; }
+  
+    /* Feed spacing tighter */
+    .create-post { margin: 12px 0; padding: 12px; }
+    .post-feed { padding: 0 0 24px; }
+    .post-card { padding: 12px; }
+    .post-actions { gap: 8px; justify-content: space-around; }
+  }
+   /* Small phones (<= 480px) */
+   @media (max-width: 480px){
+    .pronet-logo { font-size: 18px; }
+    .search-bar { padding: 9px 10px; }
+    .post-header img { width: 32px; height: 32px; }
+    .post-header span { font-size: 12px; }
+    .post-text { font-size: 14px; }
   }
   

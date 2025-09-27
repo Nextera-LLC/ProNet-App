@@ -1,0 +1,20 @@
+<section class="card" aria-labelledby="about-title">
+    <header class="card-header entry-editable">
+      <h2 id="about-title" class="title">About</h2>
+      <button class="edit-btn" aria-label="Edit experience">
+        ✎
+      </button>
+    </header>
+    <div class="card-body">
+      <p class="muted" [style.maxHeight]="isExpanded ? 'none' : '4.5em'"
+      style="overflow: hidden; text-overflow: ellipsis;">
+     {{ aboutText }}
+   </p>
+   <a (click)="isExpanded = !isExpanded" style="color: var(--primary); cursor: pointer; font-weight: 600;">
+     {{ isExpanded ? 'See less' : 'See more…' }}
+   </a>
+      <!-- <p class="muted">
+        Full‑stack engineer building ProNet — a professional networking platform. Passionate about clean architectures, fast UIs, and developer ergonomics.
+      </p> -->
+    </div>
+  </section>
