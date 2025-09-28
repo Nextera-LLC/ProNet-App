@@ -11,16 +11,54 @@ p{
     margin: 0;
 }
 
+
 /* ===== Design Tokens ===== */
 :root{
+  --bg:#f6f7f9; --surface:#ffffff; --text:#e5e7eb; --muted:#6c7382; --border:#e5e7eb;
+  --primary:#0073b1; --primary-600:#1d4ed8; --shadow:0 5px 10px rgba(0,0,0,.03);
+}
+@media (prefers-color-scheme: dark){
+  :root{
     --bg:#f6f7f9; --surface:#ffffff; --text:#e5e7eb; --muted:#6c7382; --border:#e5e7eb;
-    --primary:#0073b1; --primary-600:#1d4ed8; --shadow:0 5px 10px rgba(0,0,0,.03);
+    --primary:#0073b1; --primary-600:#3b82f6; --shadow:0 5px 10px rgba(0,0,0,.03);
   }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --bg:#f6f7f9; --surface:#ffffff; --text:#e5e7eb; --muted:#6c7382; --border:#e5e7eb;
-      --primary:#0073b1; --primary-600:#3b82f6; --shadow:0 5px 10px rgba(0,0,0,.03);
-    }
-  }
-  
+}
+
+
+/* ===== profile page Layout ===== */
+
+.card{background:var(--surface);border-radius:14px;box-shadow:var(--shadow);margin-top:16px}
+/* .card + .card{margin-top:16px} */
+.card-header{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.card-body{padding:18px 20px}
+.title{margin:0;font-size:1.125rem;font-weight:800}
+.muted{color:black}
+
+
+/* ===== profile page Edit icon css ===== */
+
+.entry-editable {
+  position: relative;
+  padding-top: 5px; /* make space for the icon */
+}
+
+.edit-btn {
+  position: absolute;
+  top: 3px;
+  right: 0;
+  background: transparent;
+  border: none;
+  color: var(--primary);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 2px;
+}
+
+.edit-btn:hover {
+  color: var(--primary-600);
+  background-color: rgb(241, 241, 241);
+  border-radius: 50%;
+ 
+}
+
   

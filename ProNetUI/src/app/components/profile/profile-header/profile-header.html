@@ -1,0 +1,73 @@
+<section class="card profile-header" aria-label="Profile header">
+  <div class="banner" role="img" aria-label="Cover image"></div>
+  <div class="header-inner">
+    <!-- <a href="#profileModal" class="profile-avatar-link" aria-label="Open profile photo modal">
+      <img class="avatar" src="assets/images/profile-pic.jpg" alt="Profile avatar" />
+      </a> -->
+    <!-- Trigger (your profile image) -->
+    <button
+      class="profile-avatar-btn"
+      (click)="openPhotoModal()"
+      aria-label="Open profile photo"
+    >
+      <img
+        class="avatar"
+        src="assets/images/profile-pic.jpg"
+        alt="Profile photo"
+      />
+    </button>
+    <div class="identity">
+      <div class="name">Umer Abubeker</div>
+      <div class="headline">
+        Software Engineer · Angular • Spring Boot • Postgres
+      </div>
+      <div class="location">Minneapolis–Saint Paul, Minnesota</div>
+    </div>
+    <div class="actions" aria-label="Profile actions">
+      <button class="btn primary">Connect</button>
+      <button class="btn-msg">Message</button>
+      <button class="btn primary">More ▾</button>
+    </div>
+  </div>
+</section>
+
+<!-- Modal -->
+<div
+  class="modal"
+  *ngIf="photoModalOpen"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="photoModalTitle"
+>
+  <div class="modal-backdrop" (click)="closePhotoModal()"></div>
+
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="closePhotoModal()" aria-label="Close">
+      ×
+    </button>
+
+    <header class="modal-header">
+      <h2 id="photoModalTitle">Profile photo</h2>
+    </header>
+
+    <div class="modal-body">
+      <img class="modal-avatar" [src]="photoSrc" alt="Profile preview" />
+    </div>
+
+    <footer class="modal-actions">
+      <button class="btn" (click)="fileInput.click()">Upload</button>
+      <button class="btn danger" (click)="onDelete()">Delete</button>
+      <button class="btn primary" (click)="onSave()">Save</button>
+    </footer>
+  </div>
+</div>
+
+<!-- Hidden file input -->
+<input
+  type="file"
+  accept="image/*"
+  hidden
+  #fileInput
+  (change)="onFileSelected($event)"
+/>
+
