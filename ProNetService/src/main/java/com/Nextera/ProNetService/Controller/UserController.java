@@ -55,11 +55,20 @@ public class UserController {
     @GetMapping("/{id}/profile-picture")
     public ResponseEntity<byte[]> getProfilePicture(@PathVariable Integer id) {
         Optional<User> userOpt = userService.getProfilePicture(id);
-        if (userOpt.isPresent() && userOpt.get().getProfilePicture() != null) {
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_TYPE, userOpt.get().getProfilePictureContentType())
-                    .body(userOpt.get().getProfilePicture());
+
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            if (user.getProfilePicture() != null) {
+                System.out.println("Returning profile picture for user: " + id);
+                return ResponseEntity.ok()
+                        .header("Content-Type", user.getProfilePictureContentType())
+                        .body(user.getProfilePicture());
+            } else {
+                System.out.println("User has no profile picture: " + id);
+                return ResponseEntity.notFound().build();
+            }
         } else {
+            System.out.println("User not found: " + id);
             return ResponseEntity.notFound().build();
         }
     }

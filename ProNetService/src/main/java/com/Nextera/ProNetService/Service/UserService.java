@@ -51,6 +51,7 @@ public class UserService {
     }
 
     // Get profile picture
+    // Get profile picture as byte[]
     public Optional<User> getProfilePicture(Integer userId) {
         return userRepository.findById(userId);
     }
