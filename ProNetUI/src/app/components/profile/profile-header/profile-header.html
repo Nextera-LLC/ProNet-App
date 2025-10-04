@@ -12,7 +12,8 @@
     >
       <img
         class="avatar"
-        src="assets/images/profile-pic.jpg"
+        [src]="photoSrc"
+        (error)="useDefalutPhoto()"
         alt="Profile photo"
       />
     </button>
