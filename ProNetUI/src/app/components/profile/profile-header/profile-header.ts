@@ -1,23 +1,37 @@
 import { NgIf } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { UserService } from '../../../services/user-service';
+import { ConfirmDialog } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-profile-header',
+  standalone: true,
   imports: [NgIf],
   templateUrl: './profile-header.html',
   styleUrl: './profile-header.css',
 })
-export class ProfileHeader {
+export class ProfileHeader{
   photoModalOpen = false;
-  photoSrc = 'assets/images/profile-pic.jpg';
+  selectedFile: File | null = null;
+  uploading = false;
+  userId = 1; // Replace with actual user ID
+  photoSrc = '';
+
+  constructor(private http: HttpClient, private userService : UserService) {
+    this.photoSrc = `http://localhost:8080/user/${this.userId}/profile-picture`;
+  }
+
 
   openPhotoModal() {
     this.photoModalOpen = true;
-    document.body.style.overflow = 'hidden'; // prevent background scroll
+    document.body.style.overflow = 'hidden';
   }
+
   closePhotoModal() {
     this.photoModalOpen = false;
     document.body.style.overflow = '';
+    this.selectedFile = null;
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -26,28 +40,65 @@ export class ProfileHeader {
   }
 
   onDelete() {
-    /* TODO: delete logic */
+  
+   if(confirm("Are You sure you want to delete your profile image?")){
+    this.userService.deleteProfilePicture(this.userId)
+    .subscribe({
+      next: () => {
+        this.useDefalutPhoto();
+        this.selectedFile = null;       
+        this.closePhotoModal();
+        alert('Photo deleted successfully');
+      },
+      error: err => {
+        console.error(err);
+        alert('Delete failed');
+      }
+    });
   }
-  onSave() {
-    /* TODO: persist changes */
   }
 
-  /* TODO: open file picker or emit event */
+  onSave() {
+    if (!this.selectedFile || !this.userId) return;
+
+    const formData = new FormData();
+    formData.append('file', this.selectedFile);
+
+    this.uploading = true;
+
+    this.userService.uploadProfilePicture(this.userId, formData)
+      .subscribe({
+        next: () => {
+          this.uploading = false;
+          this.closePhotoModal();
+          alert('Photo uploaded successfully');
+        },
+        error: err => {
+          this.uploading = false;
+          console.error(err);
+          alert('Upload failed');
+        }
+      });
+  }
+
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
 
-    const file = input.files[0];
+    this.selectedFile = input.files[0];
+
     const reader = new FileReader();
-
     reader.onload = () => {
-      // Update preview image (base64)
       this.photoSrc = reader.result as string;
-
-      // Optionally store the file for later upload
-      // this.selectedFile = file;
     };
+    reader.readAsDataURL(this.selectedFile);
+  }
 
-    reader.readAsDataURL(file);
+  triggerFileInput(inputEl: HTMLInputElement) {
+    inputEl.click();
+  }
+
+  useDefalutPhoto(){
+    this.photoSrc = 'assets/images/default-avatar.jpg';
   }
 }
