@@ -20,9 +20,9 @@
 
     <div class="identity">
     
-      <div class="name">{{ firstName }} {{ lastName }}</div>
-      <div class="headline">{{ headline }}</div>
-      <div class="location">{{ city }}{{ city && state ? ', ' : '' }}{{ state }}{{ (city || state) && country ? ', ' : '' }}{{ country }}</div>
+      <div class="name">{{ profileHeaderDto.firstName }} {{ profileHeaderDto.lastName }}</div>
+      <div class="headline">{{ profileHeaderDto.headline }}</div>
+      <div class="location">{{ profileHeaderDto.location.city }}{{ profileHeaderDto.location.city && profileHeaderDto.location.state ? ', ' : '' }}{{ profileHeaderDto.location.state }}{{ (profileHeaderDto.location.city || profileHeaderDto.location.state) && profileHeaderDto.location.country ? ', ' : '' }}{{ profileHeaderDto.location.country }}</div>
     </div>
 
     <div class="actions" aria-label="Profile actions">
@@ -96,17 +96,17 @@
         <legend>Basic info</legend>
         <div class="grid grid-2">
           <label class="field">
-            <span>First name</span>
-            <input type="text" [(ngModel)]="firstName" name="firstName" placeholder="First name" />
+            <span>First name *</span>
+            <input type="text" [(ngModel)]="profileHeaderDto.firstName" name="firstName" placeholder="First name" />
           </label>
           <label class="field">
-            <span>Last name</span>
-            <input type="text" [(ngModel)]="lastName" name="lastName" placeholder="Last name" />
+            <span>Last name *</span>
+            <input type="text" [(ngModel)]="profileHeaderDto.lastName" name="lastName" placeholder="Last name" />
           </label>
         </div>
         <label class="field">
           <span>Headline</span>
-          <input type="text" [(ngModel)]="headline" name="headline" placeholder="e.g., Software Engineer · Angular • Spring Boot • Postgres" />
+          <input type="text" [(ngModel)]="profileHeaderDto.headline" name="headline" placeholder="e.g., Software Engineer · Angular • Spring Boot • Postgres" />
         </label>
       </fieldset>
 
@@ -115,16 +115,16 @@
         <legend>Location</legend>
         <div class="grid grid-3">
           <label class="field">
-            <span>Country</span>
-            <input type="text" [(ngModel)]="country" name="country" placeholder="United States" />
+            <span>Country *</span>
+            <input type="text" [(ngModel)]="profileHeaderDto.location.country" name="country" placeholder="United States" />
           </label>
           <label class="field">
             <span>State</span>
-            <input type="text" [(ngModel)]="state" name="state" placeholder="Minnesota" />
+            <input type="text" [(ngModel)]="profileHeaderDto.location.state" name="state" placeholder="Minnesota" />
           </label>
           <label class="field">
             <span>City</span>
-            <input type="text" [(ngModel)]="city" name="city" placeholder="Minneapolis" />
+            <input type="text" [(ngModel)]="profileHeaderDto.location.city" name="city" placeholder="Minneapolis" />
           </label>
         </div>
       </fieldset>
@@ -135,15 +135,15 @@
         <div class="grid grid-3">
           <label class="field">
             <span>Phone</span>
-            <input type="tel" [(ngModel)]="phone" name="phone" placeholder="+1 (555) 555‑5555" />
+            <input type="tel" [(ngModel)]="profileHeaderDto.contact.phone" name="phone" placeholder="+1 (555) 555‑5555" />
           </label>
           <label class="field">
-            <span>Email</span>
-            <input type="email" [(ngModel)]="email" name="email" placeholder="name@example.com" />
+            <span>Email *</span>
+            <input type="email" required="" [(ngModel)]="profileHeaderDto.contact.email" name="email" placeholder="name@example.com" />
           </label>
           <label class="field">
             <span>LinkedIn</span>
-            <input type="url" [(ngModel)]="linkedin" name="linkedin" placeholder="https://linkedin.com/in/username" />
+            <input type="url" [(ngModel)]="profileHeaderDto.contact.linkedIn" name="linkedin" placeholder="https://linkedin.com/in/username" />
           </label>
         </div>
       </fieldset>

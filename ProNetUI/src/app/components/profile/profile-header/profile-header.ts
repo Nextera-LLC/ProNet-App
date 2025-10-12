@@ -1,8 +1,10 @@
 import { NgIf, NgForOf } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { UserService } from '../../../services/user-service';
+import { UserService } from '../../../services/user-service/user-service';
+import { UserProfile } from '../../../services/user-profile-service/user-profile';
+import { ProfileHeaderDto } from '../../../dto/profile-header-dto';
 
 @Component({
   selector: 'app-profile-header',
@@ -11,7 +13,7 @@ import { UserService } from '../../../services/user-service';
   templateUrl: './profile-header.html',
   styleUrl: './profile-header.css',
 })
-export class ProfileHeader {
+export class ProfileHeader implements OnInit{
   // Photo modal
   photoModalOpen = false;
   selectedFile: File | null = null;
@@ -23,22 +25,25 @@ export class ProfileHeader {
   // User / data
   userId = 1; // TODO: replace with actual user ID from auth/route
   photoSrc = '';
-  // Basic info
-  firstName = 'Umer';
-  lastName = 'Abubeker';
-  headline = 'Software Engineer · Angular • Spring Boot • Postgres';
-  // Location
-  country = 'United States';
-  state = 'Minnesota';
-  city = 'Minneapolis';
-  // Contact
-  phone = '';
-  email = '';
-  linkedin = '';
 
-  constructor(private http: HttpClient, private userService: UserService) {
+  // ProfileHeaderDto
+  profileHeaderDto : ProfileHeaderDto;
+
+  constructor(private http: HttpClient, private userProfile: UserProfile) {
     // FIX: use /users not /user
     this.photoSrc = `http://localhost:8080/users/${this.userId}/profile-picture`;
+  }
+
+  ngOnInit(): void {
+    this.userProfile.getProfileHeaderInfo(this.userId).subscribe(
+      (response : any)=>{
+        this.profileHeaderDto = response;
+        this.profileHeaderDto.headline = 'Software Engineer || Angular || Spring Boot || Postgres';
+      },
+      (error : HttpErrorResponse) =>{
+      console.log(error.message)
+      }
+    )
   }
 
   /* ===== Photo modal ===== */
@@ -62,7 +67,7 @@ export class ProfileHeader {
 
   onDelete() {
     if (confirm('Are you sure you want to delete your profile image?')) {
-      this.userService.deleteProfilePicture(this.userId).subscribe({
+      this.userProfile.deleteProfilePicture(this.userId).subscribe({
         next: () => {
           this.useDefaultPhoto();
           this.selectedFile = null;
@@ -85,7 +90,7 @@ export class ProfileHeader {
 
     this.uploading = true;
 
-    this.userService.uploadProfilePicture(this.userId, formData).subscribe({
+    this.userProfile.uploadProfilePicture(this.userId, formData).subscribe({
       next: () => {
         this.uploading = false;
         this.closePhotoModal();
@@ -143,9 +148,17 @@ export class ProfileHeader {
     //   location: { country: this.country, state: this.state, city: this.city },
     //   contact: { phone: this.phone, email: this.email, linkedin: this.linkedin }
     // };
-    // this.userService.updateProfileHeader(this.userId, payload).subscribe(...);
-
+    // this.userProfile.updateProfileHeader(this.userId, payload).subscribe(...);
+    this.userProfile.saveProfileHeaderInfo(this.userId, this.profileHeaderDto).subscribe(
+      (response : ProfileHeaderDto)=>{
+        this.profileHeaderDto = response;
+        this.profileHeaderDto.headline = 'Software Engineer || Angular || Spring Boot || Postgres';
+      },
+      (error : HttpErrorResponse) =>{
+      console.log(error.message)
+      }
+    );
     this.closeEditModal();
-    alert('Profile info saved (stub). Wire this to your backend next.');
+    alert('Profile info saved.');
   }
 }
