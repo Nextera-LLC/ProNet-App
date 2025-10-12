@@ -12,6 +12,6 @@ export class App {
   constructor(private router: Router) {}
   
   isAuthRoute(): boolean {
-    return ['/login', '/signup','/'].includes(this.router.url);
+    return ['/login', '/sign-up','/'].includes(this.router.url);
   }
 }

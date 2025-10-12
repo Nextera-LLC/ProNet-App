@@ -1,10 +1,10 @@
 <section class="card profile-header" aria-label="Profile header">
   <div class="banner" role="img" aria-label="Cover image"></div>
   <div class="header-inner">
-    <!-- <a href="#profileModal" class="profile-avatar-link" aria-label="Open profile photo modal">
-      <img class="avatar" src="assets/images/profile-pic.jpg" alt="Profile avatar" />
-      </a> -->
-    <!-- Trigger (your profile image) -->
+     <!-- Edit pencil top right -->
+  <button class="edit-btn-top-right" (click)="openEditModal()" aria-label="Edit profile header">✎</button>
+
+    <!-- Trigger (profile image -> photo modal) -->
     <button
       class="profile-avatar-btn"
       (click)="openPhotoModal()"
@@ -13,17 +13,18 @@
       <img
         class="avatar"
         [src]="photoSrc"
-        (error)="useDefalutPhoto()"
+        (error)="useDefaultPhoto()"
         alt="Profile photo"
       />
     </button>
+
     <div class="identity">
-      <div class="name">Umer Abubeker</div>
-      <div class="headline">
-        Software Engineer · Angular • Spring Boot • Postgres
-      </div>
-      <div class="location">Minneapolis–Saint Paul, Minnesota</div>
+    
+      <div class="name">{{ profileHeaderDto.firstName }} {{ profileHeaderDto.lastName }}</div>
+      <div class="headline">{{ profileHeaderDto.headline }}</div>
+      <div class="location">{{ profileHeaderDto.location.city }}{{ profileHeaderDto.location.city && profileHeaderDto.location.state ? ', ' : '' }}{{ profileHeaderDto.location.state }}{{ (profileHeaderDto.location.city || profileHeaderDto.location.state) && profileHeaderDto.location.country ? ', ' : '' }}{{ profileHeaderDto.location.country }}</div>
     </div>
+
     <div class="actions" aria-label="Profile actions">
       <button class="btn primary">Connect</button>
       <button class="btn-msg">Message</button>
@@ -32,7 +33,7 @@
   </div>
 </section>
 
-<!-- Modal -->
+<!-- ============ PHOTO MODAL ============ -->
 <div
   class="modal"
   *ngIf="photoModalOpen"
@@ -63,7 +64,7 @@
   </div>
 </div>
 
-<!-- Hidden file input -->
+<!-- Hidden file input for photo upload -->
 <input
   type="file"
   accept="image/*"
@@ -72,3 +73,86 @@
   (change)="onFileSelected($event)"
 />
 
+<!-- ============ EDIT PROFILE HEADER MODAL ============ -->
+<div
+  class="modal"
+  *ngIf="editModalOpen"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="editProfileHeaderTitle"
+>
+  <div class="modal-backdrop" (click)="closeEditModal()"></div>
+
+  <div class="modal-content large" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="closeEditModal()" aria-label="Close">×</button>
+
+    <header class="modal-header">
+      <h2 id="editProfileHeaderTitle">Edit profile</h2>
+    </header>
+
+    <form class="modal-body" (ngSubmit)="saveProfileHeader()" #editForm="ngForm">
+      <!-- Basic info -->
+      <fieldset class="section">
+        <legend>Basic info</legend>
+        <div class="grid grid-2">
+          <label class="field">
+            <span>First name *</span>
+            <input type="text" [(ngModel)]="profileHeaderDto.firstName" name="firstName" placeholder="First name" />
+          </label>
+          <label class="field">
+            <span>Last name *</span>
+            <input type="text" [(ngModel)]="profileHeaderDto.lastName" name="lastName" placeholder="Last name" />
+          </label>
+        </div>
+        <label class="field">
+          <span>Headline</span>
+          <input type="text" [(ngModel)]="profileHeaderDto.headline" name="headline" placeholder="e.g., Software Engineer · Angular • Spring Boot • Postgres" />
+        </label>
+      </fieldset>
+
+      <!-- Location -->
+      <fieldset class="section">
+        <legend>Location</legend>
+        <div class="grid grid-3">
+          <label class="field">
+            <span>Country *</span>
+            <input type="text" [(ngModel)]="profileHeaderDto.location.country" name="country" placeholder="United States" />
+          </label>
+          <label class="field">
+            <span>State</span>
+            <input type="text" [(ngModel)]="profileHeaderDto.location.state" name="state" placeholder="Minnesota" />
+          </label>
+          <label class="field">
+            <span>City</span>
+            <input type="text" [(ngModel)]="profileHeaderDto.location.city" name="city" placeholder="Minneapolis" />
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Contact -->
+      <fieldset class="section">
+        <legend>Contact info</legend>
+        <div class="grid grid-3">
+          <label class="field">
+            <span>Phone</span>
+            <input type="tel" [(ngModel)]="profileHeaderDto.contact.phone" name="phone" placeholder="+1 (555) 555‑5555" />
+          </label>
+          <label class="field">
+            <span>Email *</span>
+            <input type="email" required="" [(ngModel)]="profileHeaderDto.contact.email" name="email" placeholder="name@example.com" />
+          </label>
+          <label class="field">
+            <span>LinkedIn</span>
+            <input type="url" [(ngModel)]="profileHeaderDto.contact.linkedIn" name="linkedin" placeholder="https://linkedin.com/in/username" />
+          </label>
+        </div>
+      </fieldset>
+    </form>
+
+    <footer class="modal-actions">
+      <button class="btn ghost" type="button" (click)="closeEditModal()">Cancel</button>
+      <!-- <button class="btn" type="button" (click)="saveProfileHeader()">Save as draft</button> -->
+      <button class="btn primary" type="submit" (click)="saveProfileHeader()">Save</button>
+    </footer>
+  </div>
+</div>

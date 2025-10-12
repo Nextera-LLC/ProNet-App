@@ -6,7 +6,7 @@ import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { PasswordModule } from 'primeng/password';
 import { User } from '../../model/user';
-import { UserService } from '../../services/user-service';
+import { UserService } from '../../services/user-service/user-service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RegisterRequest } from '../../dto/register-request';
 import { Router } from '@angular/router';

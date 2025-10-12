@@ -8,7 +8,7 @@ import { ToastModule } from 'primeng/toast';
 import { Password } from 'primeng/password';
 import { UserAuth } from '../../model/user-auth';
 import { LoginRequest } from '../../dto/login-request';
-import { UserService } from '../../services/user-service';
+import { UserService } from '../../services/user-service/user-service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Jwt } from '../../dto/jwt';
 import { Router } from '@angular/router';

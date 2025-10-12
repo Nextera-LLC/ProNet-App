@@ -6,14 +6,29 @@
 /* ===== Profile Header ===== */
 .banner{height:160px;border-radius:14px 14px 0 0;background:linear-gradient(135deg,var(--primary),var(--primary-600))}
 .profile-header{position:relative}
-.header-inner{display:flex;gap:16px;align-items:flex-end;padding:0 20px 20px}
-.avatar{position:absolute;left:20px;top:88px;width:132px;height:132px;border-radius:999px;border:4px solid var(--surface);overflow:hidden;box-shadow:var(--shadow); cursor: pointer;}
-.identity{padding-left:140px;flex:1}
+.header-inner {
+  position: relative;  /* required for top/right on avatar & pencil */
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  padding: 0 20px 20px;
+}
+.avatar {
+  position: absolute;
+  left: 20px;
+  top: -50px;    /* was 88px or 100px; reduce if it looks pushed down */
+  width: 112px;
+  height: 112px;
+  border-radius: 999px;
+  border: 2px solid var(--surface);
+  box-shadow: var(--shadow);
+  object-fit: cover;
+  cursor: pointer;
+}.identity{padding-left:140px;flex:1}
 .name{font-size:1.5rem;font-weight:800}
 .headline{margin-top:4px;color:var(--muted)}
 .location{margin-top:2px;color:var(--muted);font-size:.95rem}
 .actions{display:flex;gap:10px;flex-wrap:wrap}
-
 
 .btn{appearance:none;border:1px solid var(--border);background:#fff;color:#111827;padding:10px 14px;border-radius:10px;font-weight:600;cursor:pointer}
 .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
@@ -26,8 +41,12 @@
 @media (max-width:900px){.avatar{width:96px;height:96px;top:100px}.identity{padding-left:128px}}
 @media (max-width:640px){
 .banner{height:120px}
-.avatar{position:static;width:84px;height:84px;border:3px solid var(--surface);margin:-42px 0 0 20px}
-.header-inner{flex-direction:column;align-items:flex-start;padding:0 20px 20px}
+.avatar {
+  position: static;
+  width: 84px;
+  height: 84px;
+  margin: -42px 0 0 20px;
+}.header-inner{flex-direction:column;align-items:flex-start;padding:0 20px 20px}
 .identity{padding-left:0;margin-top:4px}
 .actions{width:100%}
 .actions .btn{flex:1}
@@ -85,7 +104,7 @@
 .btn.danger{ border-color:#ef4444; color:#ef4444; }
 .btn.danger:hover{ background:#fee2e2; }
 
-/* Dark mode (optional) */
+/* Dark mode (optional)
 @media (prefers-color-scheme: dark){
   .modal-content{ background:#111827; color:#e5e7eb; }
   .modal-header, .modal-actions{ border-color:#1f2937; }
@@ -94,10 +113,65 @@
   .btn:hover{ background:#142034; }
   .btn.primary{ background:#3b82f6; border-color:#3b82f6; }
   .btn.danger{ border-color:#ef4444; color:#fecaca; }
-}
+} */
 
 /* Small phones */
 @media (max-width:480px){
   .modal-actions{ flex-wrap:wrap; justify-content:center; }
   .btn{ flex:1 1 auto; min-width:120px; }
+}
+
+
+
+
+
+
+/* ----- small tweak: make edit pencil sit top-left in identity block ----- */
+.entry-editable { position: relative; padding-top: 20px; }
+.edit-btn {
+  position: absolute; top: 0; left: 0;
+  background: transparent; border: none; color: var(--primary);
+  font-size: 1rem; cursor: pointer; padding: 2px;
+}
+.edit-btn:hover { color: var(--primary-600); }
+
+.edit-btn-top-right {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  color: var(--primary);
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 2;
+}
+.edit-btn-top-right:hover {
+  color: var(--primary-600);
+}
+.header-inner {
+  position: relative;
+}
+
+/* Reuse your modal styles; add larger dialog option for editor */
+.modal-content.large { width: min(92vw, 760px); }
+
+/* Form sections (shared with editor modal) */
+.section{border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:8px}
+.section > legend{padding:0 6px;color:var(--muted);font-weight:700;font-size:.9rem}
+.field{display:flex;flex-direction:column;gap:6px}
+.field > span{font-size:.9rem;color:var(--muted)}
+.field > input{
+  padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:transparent;color:#111827;
+  outline:none;
+}
+.field > input:focus{border-color:var(--primary); box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+
+/* Grid helpers for editor modal */
+.grid{display:grid;gap:12px}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+
+@media (max-width:760px){
+  .grid-2,.grid-3{grid-template-columns:1fr}
 }
