@@ -33,4 +33,18 @@ export class UserProfile {
     return this.http.put<ProfileHeaderDto>(`${this.BASE_URL}/users/${userId}/profile-header`, profileHeaderDto);
 
   }
+
+  saveProfileBio(userId : number, bio : string) : Observable<string>{
+    return this.http.put<string>(`${this.BASE_URL}/users/${userId}/profile-bio`, bio,{
+      responseType: 'text' as 'json'
+    });
+  
+  }
+
+  getProfileBio(userId : number) : Observable<string>{
+    return this.http.get<string>(`${this.BASE_URL}/users/${userId}/profile-bio`,{
+      responseType: 'text' as 'json'
+    });
+  }
+
 }

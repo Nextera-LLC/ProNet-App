@@ -4,5 +4,7 @@ export class User {
     email: String;
     password: String;
     confirmPassword: String;
+    bio : string;
+    headLine : String;
     role: String;
 }
