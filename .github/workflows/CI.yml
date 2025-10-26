@@ -11,51 +11,70 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U test -d testdb"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
-    # ----------------------------
-    # Checkout code
-    # ----------------------------
-    - name: Checkout source code
-      uses: actions/checkout@v3
+      # ----------------------------
+      # Checkout code
+      # ----------------------------
+      - name: Checkout source code
+        uses: actions/checkout@v3
 
-    # ----------------------------
-    # FRONTEND: Angular (ProNetUI)
-    # ----------------------------
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 22
+      # ----------------------------
+      # FRONTEND: Angular (ProNetUI)
+      # ----------------------------
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
 
-    - name: Install Angular dependencies
-      working-directory: ./ProNetUI
-      run: npm install
+      - name: Install Angular dependencies
+        working-directory: ./ProNetUI
+        run: npm install
 
-    - name: Build Angular app
-      working-directory: ./ProNetUI
-      run: npm run build -- --configuration production
+      - name: Build Angular app
+        working-directory: ./ProNetUI
+        run: npm run build -- --configuration production
 
-    # ----------------------------
-    # BACKEND: Spring Boot (ProNetService)
-    # ----------------------------
-    - name: Grant Gradle execute permissions
-      working-directory: ./ProNetService
-      run: chmod +x gradlew
+      - name: Upload frontend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: ProNetUI/dist/**
 
-    - name: Build Spring Boot app
-      working-directory: ./ProNetService
-      run: ./gradlew clean build --no-daemon
+      # ----------------------------
+      # BACKEND: Spring Boot (ProNetService)
+      # ----------------------------
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
 
-    # ----------------------------
-    # Optional: upload artifacts
-    # ----------------------------
-    - name: Upload frontend artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: frontend-build
-        path: ProNetUI/dist/**
+      - name: Grant Gradle permissions
+        working-directory: ./ProNetService
+        run: chmod +x gradlew
 
-    - name: Upload backend artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: backend-jar
-        path: ProNetService/build/libs/*.jar
+      - name: Build & Test Spring Boot App
+        working-directory: ./ProNetService
+        run: ./gradlew clean test --no-daemon
+
+      - name: Upload backend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jar
+          path: ProNetService/build/libs/*.jar
