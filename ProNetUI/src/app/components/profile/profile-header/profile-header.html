@@ -21,7 +21,7 @@
     <div class="identity">
     
       <div class="name">{{ profileHeaderDto.firstName }} {{ profileHeaderDto.lastName }}</div>
-      <div class="headline">{{ profileHeaderDto.headline }}</div>
+      <div class="headline">{{ profileHeaderDto.headLine }}</div>
       <div class="location">{{ profileHeaderDto.location.city }}{{ profileHeaderDto.location.city && profileHeaderDto.location.state ? ', ' : '' }}{{ profileHeaderDto.location.state }}{{ (profileHeaderDto.location.city || profileHeaderDto.location.state) && profileHeaderDto.location.country ? ', ' : '' }}{{ profileHeaderDto.location.country }}</div>
     </div>
 
@@ -106,7 +106,7 @@
         </div>
         <label class="field">
           <span>Headline</span>
-          <input type="text" [(ngModel)]="profileHeaderDto.headline" name="headline" placeholder="e.g., Software Engineer · Angular • Spring Boot • Postgres" />
+          <input type="text" [(ngModel)]="profileHeaderDto.headLine" name="headline" placeholder="e.g., Software Engineer · Angular • Spring Boot • Postgres" />
         </label>
       </fieldset>
 

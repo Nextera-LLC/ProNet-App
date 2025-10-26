@@ -21,6 +21,8 @@ CREATE TABLE users (
     first_name       VARCHAR(100) NOT NULL,
     last_name        VARCHAR(100) NOT NULL,
     email            VARCHAR(255) NOT NULL UNIQUE,
+    bio              TEXT,
+    headline         TEXT,
     password    VARCHAR(255) NOT NULL,
     profile_picture BYTEA,  -- store image as bytes
     profile_picture_content_type VARCHAR(100),  -- MIME type, e.g., image/png    role             VARCHAR(100),
@@ -48,50 +50,6 @@ CREATE TABLE contacts (
     user_id          INTEGER NOT NULL,
     created_at       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT FK_contact_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
-
--- Profession categories
-CREATE TABLE profession_categories (
-    id               SERIAL PRIMARY KEY,
-    category_name    VARCHAR(100) NOT NULL,
-    created_at       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
--- Profession titles
-CREATE TABLE profession_titles (
-    id               SERIAL PRIMARY KEY,
-    title            VARCHAR(100) NOT NULL,
-    category_id      INTEGER,
-    created_at       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT FK_professiontitle_category FOREIGN KEY (category_id) REFERENCES profession_categories(id) ON DELETE SET NULL
-);
-
--- Professions table
-CREATE TABLE professions (
-    id               SERIAL PRIMARY KEY,
-    title            VARCHAR(100),
-    company_name     VARCHAR(100),
-    years_of_experience INTEGER,
-    user_id          INTEGER NOT NULL,
-    created_at       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT FK_profession_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
-
--- User profiles
-CREATE TABLE user_profiles (
-    profile_id       SERIAL PRIMARY KEY,
-    user_id          INTEGER NOT NULL,
-    bio              TEXT,                -- short biography
-    location_id      INTEGER,             -- references locations table
-    phone            VARCHAR(50),
-    date_of_birth    DATE,
-    website_url      VARCHAR(512),
-    linkedin_url     VARCHAR(512),
-    github_url       VARCHAR(512),
-    created_at       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT FK_userprofile_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    CONSTRAINT FK_userprofile_location FOREIGN KEY (location_id) REFERENCES locations(id) ON DELETE SET NULL
 );
 
 -- Education

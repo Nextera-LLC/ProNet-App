@@ -33,5 +33,5 @@ export class UserService {
     return this.http.get<User>(`${this.BASE_URL}/users/current`)
   }
 
- 
+
 }

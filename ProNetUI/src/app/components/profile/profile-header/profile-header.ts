@@ -27,7 +27,7 @@ export class ProfileHeader implements OnInit{
   photoSrc = '';
 
   // ProfileHeaderDto
-  profileHeaderDto : ProfileHeaderDto;
+  profileHeaderDto : any;
 
   constructor(private http: HttpClient, private userProfile: UserProfile) {
     // FIX: use /users not /user
@@ -35,10 +35,12 @@ export class ProfileHeader implements OnInit{
   }
 
   ngOnInit(): void {
+   this. profileHeaderDto = ProfileHeaderDto;
     this.userProfile.getProfileHeaderInfo(this.userId).subscribe(
-      (response : any)=>{
+      (response : ProfileHeaderDto)=>{
         this.profileHeaderDto = response;
-        this.profileHeaderDto.headline = 'Software Engineer || Angular || Spring Boot || Postgres';
+        console.log(this.profileHeaderDto);
+        // this.profileHeaderDto.headline = 'Software Engineer || Angular || Spring Boot || Postgres';
       },
       (error : HttpErrorResponse) =>{
       console.log(error.message)
@@ -139,16 +141,7 @@ export class ProfileHeader implements OnInit{
   }
 
   saveProfileHeader() {
-    // TODO: call your backend to persist these fields
-    // Example payload:
-    // const payload = {
-    //   firstName: this.firstName,
-    //   lastName: this.lastName,
-    //   headline: this.headline,
-    //   location: { country: this.country, state: this.state, city: this.city },
-    //   contact: { phone: this.phone, email: this.email, linkedin: this.linkedin }
-    // };
-    // this.userProfile.updateProfileHeader(this.userId, payload).subscribe(...);
+    
     this.userProfile.saveProfileHeaderInfo(this.userId, this.profileHeaderDto).subscribe(
       (response : ProfileHeaderDto)=>{
         this.profileHeaderDto = response;
@@ -158,6 +151,7 @@ export class ProfileHeader implements OnInit{
       console.log(error.message)
       }
     );
+    console.log(this.profileHeaderDto);
     this.closeEditModal();
     alert('Profile info saved.');
   }

@@ -2,7 +2,7 @@ export class ProfileHeaderDto {
     // Basic info
   firstName : 'Umer';
   lastName : 'Abubeker';
-  headline : 'Software Engineer || Angular || Spring Boot || Postgres';
+  headLine : 'Software Engineer || Angular || Spring Boot || Postgres';
   // Location
   location :{
   country : 'United States';

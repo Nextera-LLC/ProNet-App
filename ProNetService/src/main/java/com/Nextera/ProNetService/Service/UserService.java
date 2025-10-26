@@ -24,6 +24,10 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    public User getCurrentUserById(Integer userId){
+        Optional<User> currentUser = userRepository.findById(userId);
+        return currentUser.get();
+    }
     // Upload profile picture
     public void uploadProfilePicture(Integer userId, MultipartFile file) throws IOException {
         Optional<User> userOpt = userRepository.findById(userId);

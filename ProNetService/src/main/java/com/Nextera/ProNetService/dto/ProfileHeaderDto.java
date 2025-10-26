@@ -11,6 +11,7 @@ public class ProfileHeaderDto {
     private String firstName;
     private String lastName;
     private String headLine;
+    private String bio;
     private Location location;
     private Contact contact;
 

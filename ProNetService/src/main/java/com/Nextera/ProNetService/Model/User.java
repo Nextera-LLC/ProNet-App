@@ -19,6 +19,8 @@ public class User {
     private String email;
     private String password;
     private String role;
+    private String headLine;
+    private String bio;
 
     @Column(name = "profile_picture")
     private byte[] profilePicture;
