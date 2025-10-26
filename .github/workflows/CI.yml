@@ -1,10 +1,10 @@
-name: Java CI with Gradle
+name: Full CI Pipeline - ProNet-APP
 
 on:
   push:
-    branches: [ "main" ]  # run CI when code pushed to main
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]  # run CI for all PRs to main
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -12,27 +12,50 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+    # ----------------------------
+    # Checkout code
+    # ----------------------------
+    - name: Checkout source code
+      uses: actions/checkout@v3
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: gradle
+    # ----------------------------
+    # FRONTEND: Angular (ProNetUI)
+    # ----------------------------
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
 
-      - name: Grant execute permission for Gradle
-        run: chmod +x gradlew
+    - name: Install Angular dependencies
+      working-directory: ./ProNetUI
+      run: npm install
 
-      - name: Build with Gradle
-        run: ./gradlew clean build --no-daemon
+    - name: Build Angular app
+      working-directory: ./ProNetUI
+      run: npm run build -- --configuration production
 
-      - name: Run Tests
-        run: ./gradlew test --no-daemon
+    # ----------------------------
+    # BACKEND: Spring Boot (ProNetService)
+    # ----------------------------
+    - name: Grant Gradle execute permissions
+      working-directory: ./ProNetService
+      run: chmod +x gradlew
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: springboot-app
-          path: build/libs/*.jar
+    - name: Build Spring Boot app
+      working-directory: ./ProNetService
+      run: ./gradlew clean build --no-daemon
+
+    # ----------------------------
+    # Optional: upload artifacts
+    # ----------------------------
+    - name: Upload frontend artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: frontend-build
+        path: ProNetUI/dist/**
+
+    - name: Upload backend artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: backend-jar
+        path: ProNetService/build/libs/*.jar
