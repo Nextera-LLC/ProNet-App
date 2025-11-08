@@ -1,7 +1,7 @@
-package com.Nextera.ProNetService.dto;
+package com.Nextera.ProNetService.dto.Profile;
 
-import com.Nextera.ProNetService.Model.Contact;
-import com.Nextera.ProNetService.Model.Location;
+import com.Nextera.ProNetService.Model.Profile.Contact;
+import com.Nextera.ProNetService.Model.Profile.Location;
 import lombok.Getter;
 import lombok.Setter;
 

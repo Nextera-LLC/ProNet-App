@@ -1,16 +1,16 @@
-package com.Nextera.ProNetService.Controller;
+package com.Nextera.ProNetService.Controller.Profile;
 
 import com.Nextera.ProNetService.Model.User;
-import com.Nextera.ProNetService.Service.UserProfileService;
+import com.Nextera.ProNetService.Service.Profile.UserProfileService;
 import com.Nextera.ProNetService.Service.UserService;
-import com.Nextera.ProNetService.dto.ProfileHeaderDto;
+import com.Nextera.ProNetService.dto.Profile.ProfileHeaderDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
-public class UserProfileController {
+public class ProfileHeaderController {
 
     @Autowired
     private UserProfileService profileService;
