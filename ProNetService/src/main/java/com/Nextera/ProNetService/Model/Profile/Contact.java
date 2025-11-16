@@ -1,5 +1,6 @@
-package com.Nextera.ProNetService.Model;
+package com.Nextera.ProNetService.Model.Profile;
 
+import com.Nextera.ProNetService.Model.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

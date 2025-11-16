@@ -1,5 +1,6 @@
-package com.Nextera.ProNetService.Model;
+package com.Nextera.ProNetService.Model.Profile;
 
+import com.Nextera.ProNetService.Model.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.*;

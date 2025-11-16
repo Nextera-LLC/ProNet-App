@@ -1,55 +1,211 @@
      
     <section class="card" aria-labelledby="exp-title">
-        <header class="card-header">
-          <h2 id="exp-title" class="title">Experience</h2>
-        </header>
+      <header class="card-header">
+        <h2 id="exp-title" class="title">Experience</h2>
+        <button class="add-btn" aria-label="Add experience" (click)="openAdd()">
+          +
+        </button>
+      </header>
+      
         <div class="card-body">
-          <div class="item entry-editable">
-            <button class="edit-btn" aria-label="Edit experience">
-              ✎
-            </button>
-            <div class="bullet" aria-hidden="true"></div>
-            <div class="meta">
-              <div class="entry-title">Founder & Full‑Stack Developer · ProNet</div>
-              <div class="entry-time">Jan 2025 – Present · Minneapolis, MN</div>
-              <ul class="muted">
-                <li>Architected Angular 20 + Spring Boot with JWT/refresh tokens.</li>
-                <li>Designed profile, feed, and connections UI with reusable components.</li>
-                <li>Optimized PostgreSQL queries with indexes and DTO projections.</li>
-              </ul>
-            </div>
+          <!-- Experience Section -->
+<section class="experience-section">
+  <!-- Always show first 2 experiences -->
+  <div
+    class="item entry-editable"
+    *ngFor="let experience of experiences | slice:0:2; let i = index"
+  >
+    <button
+      class="edit-btn"
+      aria-label="Edit experience"
+      (click)="openEdit(experience)"
+    >
+      ✎
+    </button>
+    <div class="bullet" aria-hidden="true"></div>
+    <div class="meta">
+      <div class="entry-title">
+        {{ experience.title }} · {{ experience.companyName }}
+      </div>
+      <div class="entry-time">
+        {{ experience.startDate | date: 'MMM yyyy' }}
+        –
+        {{
+          experience.isCurrent
+            ? 'Present'
+            : (experience.endDate ? (experience.endDate | date: 'MMM yyyy') : '')
+        }}
+        ·
+        {{ experience.location }}
+      </div>
+      <p class="muted" *ngIf="experience.description">
+        {{ experience.description }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Show more details for the rest -->
+  <details
+    class="show-more details-inline"
+    *ngIf="experiences.length > 2"
+  >
+    <summary>
+      <span class="label-more">
+        Show all experience ({{ experiences.length }})
+      </span>
+      <span class="label-less">Show less</span>
+    </summary>
+
+    <ng-container *ngFor="let experience of experiences | slice:2; let i = index">
+      <div class="item entry-editable">
+        <button
+          class="edit-btn"
+          aria-label="Edit experience"
+          (click)="openEdit(experience)"
+        >
+          ✎
+        </button>
+        <div class="bullet" aria-hidden="true"></div>
+        <div class="meta">
+          <div class="entry-title">
+            {{ experience.title }} · {{ experience.companyName }}
           </div>
-          <div class="item entry-editable">
-            <button class="edit-btn" aria-label="Edit experience">
-              ✎
-            </button>
-            <div class="bullet" aria-hidden="true"></div>
-            <div class="meta">
-              <div class="entry-title">Software Engineer · Innovate Solutions</div>
-              <div class="entry-time">Aug 2022 – Dec 2024 · Eden Prairie, MN</div>
-              <ul class="muted">
-                <li>Architected Angular 20 + Spring Boot with JWT/refresh tokens.</li>
-                <li>Designed profile, feed, and connections UI with reusable components.</li>
-                <li>Optimized PostgreSQL queries with indexes and DTO projections.</li>
-              </ul>          
-            </div>
+          <div class="entry-time">
+            {{ experience.startDate | date: 'MMM yyyy' }}
+            –
+            {{
+              experience.isCurrent
+                ? 'Present'
+                : (experience.endDate ? (experience.endDate | date: 'MMM yyyy') : '')
+            }}
+            ·
+            {{ experience.location }}
           </div>
-          <details class="show-more details-inline">
-            <!-- hidden items render after summary when opened -->
-            <div class="card-body">
-              <div class="item entry-editable">
-                <button class="edit-btn" aria-label="Edit experience">
-                  ✎
-                </button>
-                <div class="bullet" aria-hidden="true"></div>
-                <div class="meta">
-                  <div class="entry-title">Backend Engineer (Project) · Social Media Blog API</div>
-                  <div class="entry-time">2024 – 2025</div>
-                  <p class="muted">Implemented authentication, role‑based authorization, and CRUD services.</p>
-                </div>
-              </div>
-            </div>
-            <summary><span class="label-more">Show all experience(3)</span><span class="label-less">Show less</span></summary>
-          </details>
+          <p class="muted" *ngIf="experience.description">
+            {{ experience.description }}
+          </p>
+        </div>
+      </div>
+    </ng-container>
+  </details>
+</section>
+
         </div>
       </section>
+
+<!-- Modal -->
+<div class="modal-backdrop" *ngIf="modalOpen" (click)="onBackdropClick($event)">
+  <div
+    class="modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="exp-modal-title"
+    tabindex="-1"
+    (keydown.escape)="cancelEdit()"
+    #modalRoot
+  >
+    <header class="modal-header">
+      <h3 id="exp-modal-title">Edit Experience</h3>
+      <button class="icon-btn" aria-label="Close" (click)="cancelEdit()">✕</button>
+    </header>
+
+    <!-- SCROLLS INTERNALLY -->
+    <div class="modal-content">
+      <form class="form" >
+        <div class="grid">
+          <div class="field col-12">
+            <label for="company">Company <span class="req">*</span></label>
+            <input
+              #firstInput
+              id="company"
+              type="text"
+              [(ngModel)]="model.companyName"
+              name="companyName"
+              required
+              maxlength="255"
+              placeholder="e.g., Medtronic"
+            />
+          </div>
+
+          <div class="field col-12">
+            <label for="title">Title <span class="req">*</span></label>
+            <input
+              id="title"
+              type="text"
+              [(ngModel)]="model.title"
+              name="title"
+              required
+              maxlength="255"
+              placeholder="e.g., Software Engineer I"
+            />
+          </div>
+
+          <!-- Start & End under Title -->
+          <div class="field col-6">
+            <label for="startDate">Start date <span class="req">*</span></label>
+            <input
+              id="startDate"
+              type="date"
+              [(ngModel)]="model.startDate"
+              name="startDate"
+              required
+            />
+          </div>
+
+          <div class="field col-6" [class.disabled]="model.isCurrent">
+            <label for="endDate">End date</label>
+            <input
+              id="endDate"
+              type="date"
+              [(ngModel)]="model.endDate"
+              name="endDate"
+              [disabled]="model.isCurrent"
+              [min]="model.startDate || undefined"
+            />
+          </div>
+
+          <div class="field col-12">
+            <label class="checkbox">
+              <input
+                type="checkbox"
+                [(ngModel)]="model.isCurrent"
+                name="isCurrent"
+                (change)="onToggleCurrent()"
+              />
+              I'm currently working here
+            </label>
+          </div>
+
+          <div class="field col-12">
+            <label for="location">Location</label>
+            <input
+              id="location"
+              type="text"
+              [(ngModel)]="model.location"
+              name="location"
+              maxlength="255"
+              placeholder="City, State (optional)"
+            />
+          </div>
+
+          <div class="field col-12">
+            <label for="desc">Description</label>
+            <textarea
+              id="desc"
+              [(ngModel)]="model.description"
+              name="description"
+              rows="6"
+              placeholder="Responsibilities, achievements, stack..."
+            ></textarea>
+          </div>
+        </div>
+
+        <footer class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
+          <button class="btn danger" (click)="onDelete()">Delete</button>
+          <button type="submit" class="btn" (click)="saveExperience()" [disabled]="!canSave()">Save</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,12 +1,12 @@
-package com.Nextera.ProNetService.Service;
+package com.Nextera.ProNetService.Service.Profile;
 
-import com.Nextera.ProNetService.Model.Contact;
-import com.Nextera.ProNetService.Model.Location;
+import com.Nextera.ProNetService.Model.Profile.Contact;
+import com.Nextera.ProNetService.Model.Profile.Location;
 import com.Nextera.ProNetService.Model.User;
-import com.Nextera.ProNetService.Repository.ContactRepository;
-import com.Nextera.ProNetService.Repository.LocationRepository;
+import com.Nextera.ProNetService.Repository.Profile.ContactRepository;
+import com.Nextera.ProNetService.Repository.Profile.LocationRepository;
 import com.Nextera.ProNetService.Repository.UserRepository;
-import com.Nextera.ProNetService.dto.ProfileHeaderDto;
+import com.Nextera.ProNetService.dto.Profile.ProfileHeaderDto;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
