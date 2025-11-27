@@ -14,6 +14,10 @@ DROP TABLE IF EXISTS profession_categories CASCADE;
 DROP TABLE IF EXISTS locations CASCADE;
 DROP TABLE IF EXISTS skills CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS post CASCADE;
+DROP TABLE IF EXISTS comment CASCADE;
+DROP TABLE IF EXISTS Reaction CASCADE;
+DROP TABLE IF EXISTS share CASCADE;
 
 -- Users: basic user account info
 CREATE TABLE users (
@@ -119,3 +123,68 @@ CREATE TABLE projects (
     CONSTRAINT FK_project_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
+-- -------------------------------
+-- Table: Post
+-- -------------------------------
+CREATE TABLE Post (
+    post_id INT AUTO_INCREMENT PRIMARY KEY,
+    caption TEXT,
+    user_id INT NOT NULL,
+    created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    visibility ENUM('private', 'public', 'friends_only') DEFAULT 'public',
+    FOREIGN KEY (user_id) REFERENCES User(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- -------------------------------
+-- Table: Comment
+-- -------------------------------
+CREATE TABLE Comment (
+    comment_id INT AUTO_INCREMENT PRIMARY KEY,
+    post_id INT NOT NULL,
+    user_id INT NOT NULL,
+    content TEXT NOT NULL,
+    created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES Post(post_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES User(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- -------------------------------
+-- Table: Reaction
+-- -------------------------------
+CREATE TABLE Reaction (
+    reaction_id INT AUTO_INCREMENT PRIMARY KEY,
+    post_id INT NOT NULL,
+    user_id INT NOT NULL,
+    reaction_type ENUM('like', 'dislike') NOT NULL,
+    created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES Post(post_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES User(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- -------------------------------
+-- Table: Share
+-- -------------------------------
+CREATE TABLE Share (
+    share_id INT AUTO_INCREMENT PRIMARY KEY,
+    post_id INT NOT NULL,
+    user_id INT NOT NULL,
+    share_count INT DEFAULT 1,
+    created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES Post(post_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES User(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
