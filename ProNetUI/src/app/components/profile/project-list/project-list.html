@@ -1,65 +1,210 @@
 <section class="card" aria-labelledby="proj-title">
-    <header class="card-header">
-      <h2 id="proj-title" class="title">Projects</h2>
-    </header>
-    <div class="card-body">
-      <div class="item entry-editable">
-        <button class="edit-btn" aria-label="Edit experience">
-          ✎
-        </button>
-        <div class="bullet" aria-hidden="true"></div>
-        <div class="meta">
-          <div class="entry-title">ProNet – Networking Platform</div>
-          <p class="muted">LinkedIn‑style social networking app for professionals.</p>
-          <p><a href="#" aria-label="Open GitHub for ProNet">GitHub ↗</a></p>
-        </div>
-      </div>
-      <div class="item entry-editable">
-        <button class="edit-btn" aria-label="Edit experience">
-          ✎
-        </button>
-        <div class="bullet" aria-hidden="true"></div>
-        <div class="meta">
-          <div class="entry-title">Task ManagemApp</div>
-          <p class="muted">Tasks, reminders, and analytics dashboard.</p>
-          <p><a href="#">Live demo ↗</a></p>
-        </div>
-      </div>
-      <details class="show-more details-inline">
-        <div class="card-body">
-          <div class="item entry-editable">
-            <button class="edit-btn" aria-label="Edit experience">
-              ✎
-            </button>
-            <div class="bullet" aria-hidden="true"></div>
-            <div class="meta">
-              <div class="entry-title">JWT Auth for SPA + API</div>
-              <p class="muted">Reference implementation of access/refresh tokens & CSRF.</p>
-            </div>
-          </div>
-          <div class="item entry-editable">
-            <button class="edit-btn" aria-label="Edit experience">
-              ✎
-            </button>
-            <div class="bullet" aria-hidden="true"></div>
-            <div class="meta">
-              <div class="entry-title">Portfolio Site</div>
-              <p class="muted">Netlify + custom domain; responsive UI.</p>
-            </div>
-          </div>
-          <div class="item entry-editable">
-            <button class="edit-btn" aria-label="Edit experience">
-              ✎
-            </button>
-            <div class="bullet" aria-hidden="true"></div>
-            <div class="meta">
-              <div class="entry-title">Blog API</div>
-              <p class="muted">Spring Boot CRUD + JWT; Postgres.</p>
-            </div>
-          </div>
-        </div>
-        <summary><span class="label-more">Show all projects(5)</span><span class="label-less">Show less</span></summary>
+  <header class="card-header">
+    <h2 id="proj-title" class="title">Projects</h2>
+    <button class="add-btn" aria-label="Add project" (click)="openAdd()">
+      +
+    </button>
+  </header>
 
+  <div class="card-body">
+    <section class="projects-section">
+      <!-- Always show first 2 projects -->
+      <div
+        class="item entry-editable"
+        *ngFor="let project of projects | slice:0:2"
+      >
+        <button
+          class="edit-btn"
+          aria-label="Edit project"
+          (click)="openEdit(project)"
+        >
+          ✎
+        </button>
+        <div class="bullet" aria-hidden="true"></div>
+        <div class="meta">
+          <div class="entry-title">
+            {{ project.title }}
+          </div>
+
+          <p class="muted" *ngIf="project.description">
+            {{ project.description }}
+          </p>
+
+          <p *ngIf="project.url">
+            <a
+              [href]="project.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open project link"
+            >
+              {{ project.url | slice:0:40 }}{{ project.url.length > 40 ? '…' : '' }} ↗
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Show more details for the rest -->
+      <details
+        class="show-more details-inline"
+        *ngIf="projects.length > 2"
+      >
+        <summary>
+          <span class="label-more">
+            Show all projects ({{ projects.length }})
+          </span>
+          <span class="label-less">Show less</span>
+        </summary>
+
+        <ng-container *ngFor="let project of projects | slice:2">
+          <div class="item entry-editable">
+            <button
+              class="edit-btn"
+              aria-label="Edit project"
+              (click)="openEdit(project)"
+            >
+              ✎
+            </button>
+            <div class="bullet" aria-hidden="true"></div>
+            <div class="meta">
+              <div class="entry-title">
+                {{ project.title }}
+              </div>
+
+              <p class="muted" *ngIf="project.description">
+                {{ project.description }}
+              </p>
+
+              <p *ngIf="project.url">
+                <a
+                  [href]="project.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Open project link"
+                >
+                  {{ project.url | slice:0:40 }}{{ project.url.length > 40 ? '…' : '' }} ↗
+                </a>
+              </p>
+            </div>
+          </div>
+        </ng-container>
       </details>
+    </section>
+  </div>
+</section>
+
+<!-- Project Modal -->
+<div class="modal-backdrop" *ngIf="modalOpen" (click)="onBackdropClick($event)">
+  <div
+    class="modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="proj-modal-title"
+    tabindex="-1"
+    (keydown.escape)="cancelEdit()"
+    #modalRoot
+  >
+    <header class="modal-header">
+      <h3 id="proj-modal-title">
+        {{ isEditMode ? 'Edit Project' : 'Add Project' }}
+      </h3>
+      <button class="icon-btn" aria-label="Close" (click)="cancelEdit()">✕</button>
+    </header>
+
+    <div class="modal-content">
+      <form class="form">
+        <div class="grid">
+          <!-- Title -->
+          <div class="field col-12">
+            <label for="title">Title <span class="req">*</span></label>
+            <input
+              #firstInput
+              id="title"
+              type="text"
+              [(ngModel)]="model.title"
+              name="title"
+              required
+              maxlength="255"
+              placeholder="e.g., ProNet – Networking Platform"
+            />
+          </div>
+
+          <!-- URL -->
+          <div class="field col-12">
+            <label for="url">Project URL</label>
+            <input
+              id="url"
+              type="url"
+              [(ngModel)]="model.url"
+              name="url"
+              maxlength="512"
+              placeholder="e.g., https://github.com/username/pronet"
+            />
+          </div>
+
+          <!-- Start & End dates -->
+          <div class="field col-6">
+            <label for="startDate">Start date</label>
+            <input
+              id="startDate"
+              type="date"
+              [(ngModel)]="model.startDate"
+              name="startDate"
+            />
+          </div>
+
+          <div class="field col-6">
+            <label for="endDate">End date</label>
+            <input
+              id="endDate"
+              type="date"
+              [(ngModel)]="model.endDate"
+              name="endDate"
+              [min]="model.startDate || undefined"
+            />
+          </div>
+
+          <!-- Description -->
+          <div class="field col-12">
+            <label for="projDesc">Description</label>
+            <textarea
+              id="projDesc"
+              [(ngModel)]="model.description"
+              name="description"
+              rows="5"
+              placeholder="Short project overview, tech stack, features..."
+            ></textarea>
+          </div>
+        </div>
+
+        <footer class="modal-actions">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="cancelEdit()"
+          >
+            Cancel
+          </button>
+
+          <!-- Delete only in edit mode -->
+          <button
+            type="button"
+            class="btn danger"
+            *ngIf="isEditMode"
+            (click)="onDelete()"
+          >
+            Delete
+          </button>
+
+          <button
+            type="submit"
+            class="btn"
+            (click)="saveProject()"
+            [disabled]="!canSaveProject()"
+          >
+            Save
+          </button>
+        </footer>
+      </form>
     </div>
-  </section>
+  </div>
+</div>

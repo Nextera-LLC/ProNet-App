@@ -1,46 +1,242 @@
 <section class="card" aria-labelledby="edu-title">
-    <header class="card-header">
-      <h2 id="edu-title" class="title">Education</h2>
-     
-    </header>
-    <div class="card-body entry-editable">
-      <div class="item">
-        <button class="edit-btn" aria-label="Edit experience">
+  <header class="card-header">
+    <h2 id="edu-title" class="title">Education</h2>
+    <button class="add-btn" aria-label="Add education" (click)="openAdd()">
+      +
+    </button>
+  </header>
+
+  <div class="card-body">
+    <!-- Education Section -->
+    <section class="education-section">
+
+      <!-- Always show first 2 items -->
+      <div
+        class="item entry-editable"
+        *ngFor="let education of educations | slice:0:2; let i = index"
+      >
+        <button
+          class="edit-btn"
+          aria-label="Edit education"
+          (click)="openEdit(education)"
+        >
           ✎
         </button>
+
         <div class="bullet" aria-hidden="true"></div>
+
         <div class="meta">
-          <div class="entry-title">University of Minnesota</div>
-          <div class="entry-sub">B.S. (in progress) – Computer Science</div>
-          <div class="entry-time">2023 – Present</div>
+
+          <!-- Title row -->
+          <div class="entry-title">
+            {{ education.institution }}
+            
+            
+          </div>
+          <div class="entry-sub">{{ education.degree || 'Degree' }}
+            <span *ngIf="education.fieldOfStudy"> · {{ education.fieldOfStudy }}</span>
+          </div>
+
+          <!-- Dates + Field -->
+          <div class="entry-time">
+            {{ education.startDate | date: 'MMM yyyy' }}
+            –
+            {{
+              education.endDate
+                ? (education.endDate | date: 'MMM yyyy')
+                : 'Present'
+            }}
+           
+          </div>
+
+          <!-- Description -->
+          <p class="muted" *ngIf="education.description">
+            {{ education.description }}
+          </p>
         </div>
       </div>
-      <div class="item entry-editable">
-        <button class="edit-btn" aria-label="Edit experience">
-          ✎
-        </button>
-        <div class="bullet" aria-hidden="true"></div>
-        <div class="meta">
-          <div class="entry-title">Coursera</div>
-          <div class="entry-sub">Professional Certificates</div>
-          <div class="entry-time">2021</div>
-        </div>
-      </div>
-      <details class="show-more details-inline">
-        <div class="card-body">
+
+      <!-- Show More -->
+      <details
+        class="show-more details-inline"
+        *ngIf="educations.length > 2"
+      >
+        <summary>
+          <span class="label-more">
+            Show all education ({{ educations.length }})
+          </span>
+          <span class="label-less">Show less</span>
+        </summary>
+
+        <ng-container *ngFor="let education of educations | slice:2">
           <div class="item entry-editable">
-            <button class="edit-btn" aria-label="Edit experience">
+            <button
+              class="edit-btn"
+              aria-label="Edit education"
+              (click)="openEdit(education)"
+            >
               ✎
             </button>
+
             <div class="bullet" aria-hidden="true"></div>
+
             <div class="meta">
-              <div class="entry-title">Community College</div>
-              <div class="entry-sub">A.A. – Liberal Arts</div>
-              <div class="entry-time">2019 – 2021</div>
+              <!-- Title -->
+              <div class="entry-title">
+                {{ education.degree || 'Degree' }}
+                ·
+                {{ education.institution }}
+              </div>
+
+              <!-- Dates + field -->
+              <div class="entry-time">
+                {{ education.startDate | date: 'MMM yyyy' }}
+                –
+                {{
+                  education.endDate
+                    ? (education.endDate | date: 'MMM yyyy')
+                    : 'Present'
+                }}
+                <span *ngIf="education.fieldOfStudy"> · {{ education.fieldOfStudy }}</span>
+              </div>
+
+              <!-- Description -->
+              <p class="muted" *ngIf="education.description">
+                {{ education.description }}
+              </p>
             </div>
           </div>
-        </div>
-        <summary><span class="label-more">Show all education(3)</span><span class="label-less">Show less</span></summary>
+        </ng-container>
+
       </details>
+    </section>
+  </div>
+</section>
+
+
+
+  <!-- Education Modal -->
+<div class="modal-backdrop" *ngIf="modalOpen" (click)="onBackdropClick($event)">
+  <div
+    class="modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="edu-modal-title"
+    tabindex="-1"
+    (keydown.escape)="cancelEdit()"
+    #modalRoot
+  >
+    <header class="modal-header">
+      <h3 id="edu-modal-title">Edit Education</h3>
+      <button class="icon-btn" aria-label="Close" (click)="cancelEdit()">✕</button>
+    </header>
+
+    <!-- SCROLLS INTERNALLY -->
+    <div class="modal-content">
+      <form class="form">
+        <div class="grid">
+          <!-- Institution -->
+          <div class="field col-12">
+            <label for="institution">School / Institution <span class="req">*</span></label>
+            <input
+              #firstInput
+              id="institution"
+              type="text"
+              [(ngModel)]="model.institution"
+              name="institution"
+              required
+              maxlength="255"
+              placeholder="e.g., University of Minnesota"
+            />
+          </div>
+
+          <!-- Degree -->
+          <div class="field col-12">
+            <label for="degree">Degree</label>
+            <input
+              id="degree"
+              type="text"
+              [(ngModel)]="model.degree"
+              name="degree"
+              maxlength="255"
+              placeholder="e.g., Bachelor of Science"
+            />
+          </div>
+
+          <!-- Field of Study -->
+          <div class="field col-12">
+            <label for="fieldOfStudy">Field of study</label>
+            <input
+              id="fieldOfStudy"
+              type="text"
+              [(ngModel)]="model.fieldOfStudy"
+              name="fieldOfStudy"
+              maxlength="255"
+              placeholder="e.g., Computer Science"
+            />
+          </div>
+
+          <!-- Start & End dates -->
+          <div class="field col-6">
+            <label for="startDate">Start date</label>
+            <input
+              id="startDate"
+              type="date"
+              [(ngModel)]="model.startDate"
+              name="startDate"
+            />
+          </div>
+
+          <div class="field col-6">
+            <label for="endDate">End date</label>
+            <input
+              id="endDate"
+              type="date"
+              [(ngModel)]="model.endDate"
+              name="endDate"
+              [min]="model.startDate || undefined"
+            />
+          </div>
+
+          <!-- Grade -->
+          <div class="field col-12">
+            <label for="grade">Grade</label>
+            <input
+              id="grade"
+              type="text"
+              [(ngModel)]="model.grade"
+              name="grade"
+              maxlength="50"
+              placeholder="e.g., 3.8 GPA"
+            />
+          </div>
+
+          <!-- Description -->
+          <div class="field col-12">
+            <label for="eduDesc">Description</label>
+            <textarea
+              id="eduDesc"
+              [(ngModel)]="model.description"
+              name="description"
+              rows="6"
+              placeholder="Relevant coursework, honors, activities, projects..."
+            ></textarea>
+          </div>
+        </div>
+
+        <footer class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
+          <button type="button" class="btn danger" *ngIf="isEditMode" (click)="onDelete()">Delete</button>
+          <button
+            type="submit"
+            class="btn"
+            (click)="saveEducation()"
+            [disabled]="!canSaveEducation()"
+          >
+            Save
+          </button>
+        </footer>
+      </form>
     </div>
-  </section>
+  </div>
+</div>

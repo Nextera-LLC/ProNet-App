@@ -145,6 +145,7 @@ export class ExperienceList implements OnInit {
           // update list locally or reload
           this.loadExperiences();
           this.cancelEdit();
+          alert("Experience updated!")
         },
         (error: HttpErrorResponse) => {
           console.log(error.message);
@@ -157,6 +158,8 @@ export class ExperienceList implements OnInit {
           // push new item or reload
           this.loadExperiences();
           this.cancelEdit();
+          alert("Experience added!")
+
         },
         (error: HttpErrorResponse) => {
           console.log(error.message);
