@@ -1,6 +1,7 @@
 package com.Nextera.ProNetService.dto.Profile;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 @Getter
@@ -8,9 +9,16 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SkillDto {
+public class UserSkillDto {
 
-    private Integer skillId;
+    private Integer userSkillId;
+    private Integer userId;
+
     private String name;
+    private String level;
+    private BigDecimal yearsExperience;
+
     private OffsetDateTime createdAt;
+    private OffsetDateTime updatedAt;
 }
+

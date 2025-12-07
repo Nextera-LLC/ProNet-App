@@ -1,30 +1,119 @@
 <section class="card" aria-labelledby="skills-title">
-    <header class="card-header entry-editable">
-      <h2 id="skills-title" class="title">Skills</h2>
-        <button class="edit-btn" aria-label="Edit experience">
-          ✎
-        </button>
-    </header>
-    <div class="card-body">
-      <div class="skills">
-        <span class="chip">Angular</span>
-        <span class="chip">TypeScript</span>
-        <span class="chip">Spring Boot</span>
-        <span class="chip">PostgreSQL</span>
-      </div>
-      <details class="show-more details-inline">
-        <div class="card-body">
-          <div class="skills">
-            <span class="chip">PrimeNG</span>
-            <span class="chip">JWT</span>
-            <span class="chip">REST APIs</span>
-            <span class="chip">Docker</span>
-            <span class="chip">Git</span>
-            <span class="chip">CI/CD</span>
-          </div>
-        </div>
-        <summary><span class="label-more">Show all skills(10)</span><span class="label-less">Show less</span></summary>
+  <header class="card-header entry-editable">
+    <h2 id="skills-title" class="title">Skills</h2>
 
-      </details>
+    <div class="card-header-actions">
+      <button class="add-btn" type="button" (click)="openAddModal()">
+        +
+      </button>
     </div>
-  </section>
+  </header>
+
+  <div class="card-body">
+    <div class="skills">
+      <span
+        class="chip"
+        *ngFor="let skill of primarySkills; let i = index"
+        (click)="openEditModal(skill, i, 'primary')"
+      >
+        {{ skill.name }}
+      </span>
+    </div>
+
+    <details class="show-more details-inline" *ngIf="moreSkills.length > 0">
+      <div class="card-body">
+        <div class="skills">
+          <span
+            class="chip"
+            *ngFor="let skill of moreSkills; let i = index"
+            (click)="openEditModal(skill, i, 'more')"
+          >
+            {{ skill.name }}
+          </span>
+        </div>
+      </div>
+      <summary>
+        <span class="label-more">Show all skills ({{ totalSkillsCount }})</span>
+        <span class="label-less">Show less</span>
+      </summary>
+    </details>
+  </div>
+</section>
+
+<!-- ===== Modal (plain HTML, controlled by *ngIf) ===== -->
+<div class="modal-backdrop" *ngIf="showModal"></div>
+
+<div
+  class="modal"
+  *ngIf="showModal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="skill-modal-title"
+>
+  <div class="modal-inner">
+    <header class="modal-header">
+      <h3 id="skill-modal-title">{{ modalTitle }}</h3>
+      <button class="icon-btn" type="button" (click)="closeModal()">✕</button>
+    </header>
+
+    <div class="modal-body">
+      <div class="form-field">
+        <label for="skill-name">Skill name</label>
+        <input
+          id="skill-name"
+          type="text"
+          [(ngModel)]="currentSkillName"
+          placeholder="e.g. Angular, Spring Boot"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="skill-level">Level</label>
+        <select id="skill-level" [(ngModel)]="currentSkillLevel">
+          <option value="" disabled>Select level</option>
+          <option value="Beginner">Beginner</option>
+          <option value="Intermediate">Intermediate</option>
+          <option value="Advanced">Advanced</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="skill-years">Years of experience (optional)</label>
+        <input
+          id="skill-years"
+          type="number"
+          step="0.5"
+          min="0"
+          [(ngModel)]="currentSkillYears"
+          placeholder="e.g. 2.5"
+        />
+      </div>
+    </div>
+
+    <footer class="modal-footer">
+      <button
+        class="btn-link danger"
+        type="button"
+        *ngIf="isEditMode"
+        (click)="deleteSkill()"
+      >
+        Delete skill
+      </button>
+
+      <span class="spacer"></span>
+
+      <button class="btn-secondary" type="button" (click)="closeModal()">
+        Cancel
+      </button>
+
+      <button
+        class="btn-primary"
+        type="button"
+        (click)="saveSkill()"
+        [disabled]="!currentSkillName || !currentSkillLevel"
+      >
+        {{ isEditMode ? 'Update' : 'Save' }}
+      </button>
+    </footer>
+  </div>
+</div>
