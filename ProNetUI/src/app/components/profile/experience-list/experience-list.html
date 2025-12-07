@@ -202,7 +202,7 @@
 
         <footer class="modal-actions">
           <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
-          <button class="btn danger" (click)="onDelete()">Delete</button>
+          <button class="btn danger" *ngIf="isEditMode" (click)="onDelete()" >Delete</button>
           <button type="submit" class="btn" (click)="saveExperience()" [disabled]="!canSave()">Save</button>
         </footer>
       </form>

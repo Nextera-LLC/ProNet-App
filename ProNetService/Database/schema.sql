@@ -89,25 +89,24 @@ CREATE TABLE experience (
 );
 
 -- Skills
-CREATE TABLE skills (
-    skill_id         SERIAL PRIMARY KEY,
-    name             VARCHAR(100) NOT NULL UNIQUE,
-    created_at       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+--CREATE TABLE skills (
+--    skill_id         SERIAL PRIMARY KEY,
+--    name             VARCHAR(100) NOT NULL UNIQUE,
+--    created_at       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+--);
 
--- User Skills (many-to-many)
 CREATE TABLE user_skills (
     user_skill_id    SERIAL PRIMARY KEY,
     user_id          INTEGER NOT NULL,
-    skill_id         INTEGER NOT NULL,
-    level            VARCHAR(50),         -- e.g. Beginner / Intermediate / Advanced or numeric
+    name             VARCHAR(100) NOT NULL,
+    level            VARCHAR(50),         -- e.g. Beginner / Intermediate / Advanced
     years_experience DECIMAL(4,2),        -- optional
     created_at       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT FK_userskill_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    CONSTRAINT FK_userskill_skill FOREIGN KEY (skill_id) REFERENCES skills(skill_id) ON DELETE CASCADE,
-    CONSTRAINT UQ_user_skill UNIQUE(user_id, skill_id)
+    CONSTRAINT UQ_user_skill UNIQUE (user_id, name)
 );
+
 
 -- Projects
 CREATE TABLE projects (
