@@ -72,6 +72,9 @@ jobs:
       - name: Build & Test Spring Boot App
         working-directory: ./ProNetService
         run: ./gradlew clean test --no-daemon
+        
+      - name: Test
+        run: ./gradlew test --stacktrace --info
 
       - name: Upload backend artifact
         uses: actions/upload-artifact@v4
