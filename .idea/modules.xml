@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProNetService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ProNetService.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProNetService.test.iml" filepath="$PROJECT_DIR$/.idea/modules/ProNetService.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/ProNet_App.iml" filepath="$PROJECT_DIR$/.idea/ProNet_App.iml" />
     </modules>
   </component>
