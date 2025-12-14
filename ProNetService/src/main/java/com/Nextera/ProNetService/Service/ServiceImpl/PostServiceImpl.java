@@ -5,10 +5,11 @@ import com.Nextera.ProNetService.Repository.PostRepository;
 import com.Nextera.ProNetService.Service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Date;
-
+@Service
 public class PostServiceImpl implements PostService {
  @Autowired
  private PostRepository postRepository;

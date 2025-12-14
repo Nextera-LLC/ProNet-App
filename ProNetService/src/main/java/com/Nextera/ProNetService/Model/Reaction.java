@@ -5,14 +5,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 
 @Entity
-@Table(name = "Reaction")
-@Setter
+@Table(name = "reaction")
 @Getter
+@Setter
 @NoArgsConstructor
 public class Reaction {
 
@@ -29,15 +28,15 @@ public class Reaction {
     private User user;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "reaction_type", nullable = false)
     private ReactionType reactionType;
 
+    @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate = new Date();
+
 
     public enum ReactionType {
         LIKE, DISLIKE
     }
-
-    // Getters and setters...
 }
