@@ -8,9 +8,9 @@ import lombok.Setter;
 import java.util.Date;
 
 @Entity
-@Table(name = "Share")
-@Setter
+@Table(name = "share")
 @Getter
+@Setter
 @NoArgsConstructor
 public class Share {
 
@@ -26,11 +26,11 @@ public class Share {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false)
+    @Column(name = "share_count")
     private Integer shareCount = 1;
 
+    @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate = new Date();
 
-    // Getters and setters...
 }

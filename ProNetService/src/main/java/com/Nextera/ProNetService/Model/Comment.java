@@ -5,14 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.autoconfigure.web.WebProperties;
-import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 
 @Entity
-@Table(name = "Comment")
-@Setter
+@Table(name = "comment")
 @Getter
+@Setter
 @NoArgsConstructor
 public class Comment {
 
@@ -31,9 +30,8 @@ public class Comment {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
+    @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate = new Date();
 
-    // Getters and setters...
 }
-

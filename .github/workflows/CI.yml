@@ -15,9 +15,9 @@ jobs:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_USER: test
-          POSTGRES_PASSWORD: test
-          POSTGRES_DB: testdb
+          POSTGRES_USER: icare
+          POSTGRES_PASSWORD: icare@2025
+          POSTGRES_DB: ProNet
         ports:
           - 5432:5432
         options: >-

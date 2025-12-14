@@ -29,7 +29,7 @@ public class UserProfileService {
 //         Update user base info
         if (dto.getFirstName() != null) user.setFirstName(dto.getFirstName());
         if (dto.getLastName() != null) user.setLastName(dto.getLastName());
-        if (dto.getHeadLine() != null) user.setHeadLine(dto.getHeadLine());
+        if (dto.getHeadLine() != null) user.setHeadline(dto.getHeadLine());
         userRepository.save(user);
 
         // UPSERT Location
@@ -72,7 +72,7 @@ public class UserProfileService {
         response.setLastName(user.getLastName());
         response.setLocation(location);
         response.setContact(contact);
-        response.setHeadLine(user.getHeadLine());
+        response.setHeadLine(user.getHeadline());
         response.setBio(user.getBio());
 
         return response;
@@ -103,7 +103,7 @@ public ProfileHeaderDto getHeader(Integer userId){
     response.setLastName(user.getLastName());
     response.setLocation(location);
     response.setContact(contact);
-    response.setHeadLine(user.getHeadLine());
+    response.setHeadLine(user.getHeadline());
     response.setBio(user.getBio());
 
 
