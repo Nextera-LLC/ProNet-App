@@ -85,3 +85,12 @@ jobs:
         with:
           name: backend-jar
           path: ProNetService/build/libs/*.jar
+
+      - name: Wait for PostgreSQL
+        run: |
+          for i in {1..10}; do
+            pg_isready -h localhost -U ${{ secrets.DB_USER }} -d ProNet && break
+            echo "Waiting for DB..."
+            sleep 3
+          done
+    
