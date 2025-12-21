@@ -1,0 +1,135 @@
+    <!-- Create Post -->
+    <section class="create-post">
+        <img
+          src="assets/images/profile-pic.jpg"
+          alt="mini-profile"
+          class="mini-profile"
+        />
+      
+        <!-- Click-to-open "input" -->
+        <button
+          type="button"
+          class="start-input"
+          (click)="openModal()"
+          aria-haspopup="dialog"
+          aria-controls="create-post-modal"
+        >
+          Start a post…
+        </button>
+      
+        <button class="post-btn" type="button" (click)="openModal()">Post</button>
+      </section>
+      
+      <!-- Backdrop -->
+      <div
+        class="modal-backdrop"
+        *ngIf="isModalOpen"
+        (click)="closeModal()"
+      ></div>
+      
+      <!-- Modal -->
+      <div
+        class="modal"
+        *ngIf="isModalOpen"
+        id="create-post-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="create-post-title"
+        (click)="$event.stopPropagation()"
+      >
+        <div class="modal-inner">
+          <header class="modal-header">
+            <div class="header-left">
+              <img
+                src="assets/images/profile-pic.jpg"
+                alt="profile"
+                class="modal-avatar"
+              />
+              <div class="header-meta">
+                <div class="name">Umer Abubeker</div>
+                <button type="button" class="audience-btn">
+                  Public <span class="caret">▾</span>
+                </button>
+              </div>
+            </div>
+      
+            <button type="button" class="icon-btn" (click)="closeModal()" aria-label="Close">
+              ✕
+            </button>
+          </header>
+      
+          <div class="modal-body">
+            <textarea
+              class="post-textarea"
+              [(ngModel)]="postText"
+              rows="6"
+              placeholder="What do you want to talk about?"
+            ></textarea>
+      
+            <div class="link-preview" *ngIf="linkPreviewUrl">
+              <div class="link-thumb"></div>
+              <div class="link-meta">
+                <div class="link-title">Link preview</div>
+                <div class="link-url">{{ linkPreviewUrl }}</div>
+              </div>
+              <button class="icon-btn small" type="button" (click)="removeLinkPreview()" aria-label="Remove link preview">
+                ✕
+              </button>
+            </div>
+      
+            <div class="composer-actions">
+              <input
+  type="file"
+  #photoInput
+  accept="image/*"
+  hidden
+/>
+
+<input
+  type="file"
+  #videoInput
+  accept="video/*"
+  hidden
+/>
+              <!-- Action buttons -->
+<button
+type="button"
+class="action-chip"
+(click)="photoInput.click()"
+>
+📷 Photo
+</button>
+
+<button
+type="button"
+class="action-chip"
+(click)="videoInput.click()"
+>
+🎥 Video
+</button>
+              <button type="button" class="action-chip" (click)="attachMock('event')">📅 Event</button>
+              <button type="button" class="action-chip" (click)="addMockLinkPreview()">🔗 Link</button>
+      
+              <span class="spacer"></span>
+      
+              <div class="char-count" [class.warn]="postText.length > maxChars">
+                {{ postText.length }}/{{ maxChars }}
+              </div>
+            </div>
+          </div>
+      
+          <footer class="modal-footer">
+            <button type="button" class="btn-secondary" (click)="closeModal()">Cancel</button>
+      
+            <button
+              type="button"
+              class="btn-primary"
+              (click)="submitPost()"
+              [disabled]="isPostDisabled()"
+            >
+              Post
+            </button>
+          </footer>
+        </div>
+      </div>
+      
