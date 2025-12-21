@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user-service/user-service';
 import { User } from '../../model/user';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Post } from '../posts/post/post';
 
 @Component({
   selector: 'app-home-page',
-  imports: [],
+  imports: [Post],
   templateUrl: './home-page.html',
   styleUrl: './home-page.css'
 })
