@@ -8,34 +8,36 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
+    # -----------------------------------
+    # PostgreSQL service (CI database)
+    # -----------------------------------
     services:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_USER: icare
-          POSTGRES_PASSWORD: icare@2025
+          POSTGRES_USER: ${{ secrets.DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
           POSTGRES_DB: ProNet
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U test -d testdb"
+          --health-cmd "pg_isready -U icare -d ProNet"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
 
     steps:
-      # ----------------------------
-      # Checkout code
-      # ----------------------------
+      # -----------------------------------
+      # Checkout source code
+      # -----------------------------------
       - name: Checkout source code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # ----------------------------
+      # ===================================
       # FRONTEND: Angular (ProNetUI)
-      # ----------------------------
+      # ===================================
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -55,9 +57,9 @@ jobs:
           name: frontend-build
           path: ProNetUI/dist/**
 
-      # ----------------------------
+      # ===================================
       # BACKEND: Spring Boot (ProNetService)
-      # ----------------------------
+      # ===================================
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -71,6 +73,11 @@ jobs:
 
       - name: Build & Test Spring Boot App
         working-directory: ./ProNetService
+        env:
+          SPRING_PROFILES_ACTIVE: test
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: ./gradlew clean test --no-daemon
 
       - name: Upload backend artifact
@@ -78,3 +85,12 @@ jobs:
         with:
           name: backend-jar
           path: ProNetService/build/libs/*.jar
+
+      - name: Wait for PostgreSQL
+        run: |
+          for i in {1..10}; do
+            pg_isready -h localhost -U ${{ secrets.DB_USER }} -d ProNet && break
+            echo "Waiting for DB..."
+            sleep 3
+          done
+    
