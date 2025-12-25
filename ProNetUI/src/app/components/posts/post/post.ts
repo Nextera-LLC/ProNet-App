@@ -1,17 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PostService } from '../../../services/posts/post-service';
 import { PostModal } from '../../../model/posts/post-modal';
+import { TimeAgoPipe } from '../../../dto/TimeAgoPipe';
 
 @Component({
   selector: 'app-post',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TimeAgoPipe],
   templateUrl: './post.html',
   styleUrl: './post.css',
 })
-export class Post {
+export class Post implements OnInit{
+
+  posts : PostModal[];
+
   // ===== Modal State =====
   isModalOpen = false;
 
@@ -24,9 +28,25 @@ export class Post {
   isSubmitting = false;
 
   // ===== TEMP: Replace with real logged-in user id (from Auth service later) =====
-  userId = 1;
+  userId = 3;
 
   constructor(private postService: PostService) {}
+
+  ngOnInit(): void {
+  this.getAllPosts();
+  }
+
+  getAllPosts(){
+    this.postService.getAllPosts().subscribe({
+      next: (posts) =>{
+        this.posts = posts;
+        console.log(this.posts);
+      },
+      error : (err)=>{
+        console.error('Failed to get posts:', err);
+      }
+    })
+  }
 
   // ===== Modal Controls =====
   openModal(): void {
@@ -95,6 +115,7 @@ export class Post {
       },
       complete: () => {
         this.isSubmitting = false;
+        this.getAllPosts();
       },
     });
   }

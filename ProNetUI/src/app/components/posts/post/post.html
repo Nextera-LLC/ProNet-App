@@ -20,6 +20,58 @@
         <button class="post-btn" type="button" (click)="openModal()">Post</button>
       </section>
       
+ <!-- Posts -->
+ <section class="post-feed">
+  <!-- Repeat this block for each post -->
+  <div class="post-card" 
+  *ngFor="let post of posts let i = index"
+  >
+    <div class="post-header">
+      <img src="http://localhost:8080/users/{{post.user?.userId}}/profile-picture"/>
+      <div>
+        <strong>{{post.user?.firstName}} {{post.user?.lastName}}</strong>
+        <p>{{post.user?.headLine}}</p>
+      </div>
+      <span>{{ post.createdDate | timeAgo }}</span>
+    </div>
+    <p class="post-text">{{post.caption}}</p>
+    <!-- <img src="" alt="Post image" class="post-image"/> -->
+    <hr style="width: 100%; margin-top: 8px;border: 1px solid black;">
+    <div class="post-actions">
+      <button><i class="fas fa-thumbs-up"></i> <span>Like</span></button>
+      <button><i class="fas fa-comment"></i><span>Comment</span> </button>
+      <button><i class="fas fa-share"></i> <span>Share</span></button>
+    </div>
+  </div>
+  <!-- Add more posts here if needed -->
+</section>
+
+
+<!-- <section class="post-feed"> -->
+  <!-- Repeat this block for each post -->
+  <!-- <div class="post-card">
+    <div class="post-header">
+      <img src="assets/images/profile-pic.jpg"  />
+      <div>
+        <strong>Umer Abubeker</strong>
+        <p>Software Engineer</p>
+      </div>
+      <span>3h</span>
+    </div>
+    <p class="post-text">Best looking man alive...LOL..JK😂</p>
+    <img src="assets/images/profile-pic.jpg" alt="Post image" class="post-image"/>
+    <hr style="width: 100%; margin-top: 8px;border: 1px solid black;">
+    <div class="post-actions">
+      <button><i class="fas fa-thumbs-up"></i><span>Like</span></button>
+      <button><i class="fas fa-comment"></i><span>Comment</span></button>
+      <button><i class="fas fa-share"></i><span>Share</span></button>
+    </div>
+  </div>
+
+</section> -->
+
+
+
       <!-- Backdrop -->
       <div
         class="modal-backdrop"
