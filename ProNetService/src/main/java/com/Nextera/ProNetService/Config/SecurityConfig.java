@@ -27,10 +27,12 @@ public class SecurityConfig {
         return http
                 .cors(Customizer.withDefaults()) // <-- enable CORS at security layer
                 .csrf(csrf -> csrf.disable()) // REST APIs only
+                .formLogin(form -> form.disable())
+                .httpBasic(basic -> basic.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/auth/register").permitAll()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/auth/login", "/auth/register", "/users/*/profile-picture").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults()) // optional (handy for quick testing)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

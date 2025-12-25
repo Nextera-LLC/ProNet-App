@@ -51,6 +51,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<Post> getAllPosts() {
+        return postRepository.findAllByOrderByCreatedDateDesc();
+    }
+
+    @Override
     public List<Post> getPostsByUserId(Integer userId) {
         User user = userService.getCurrentUserById(userId);
         if(user == null){

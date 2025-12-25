@@ -17,4 +17,10 @@ export class PostService {
 addPost(post : PostModal, userId : number) : Observable<PostModal> {
   return this.http.post<PostModal>(`${this.BASE_URL}/api/users/${userId}/post`, post);
 }
+
+/* ========== GET (ALL POSTS) ========== */
+getAllPosts() : Observable<PostModal[]> {
+  return this.http.get<PostModal[]>(`${this.BASE_URL}/api/users/posts`);
+}
+
 }

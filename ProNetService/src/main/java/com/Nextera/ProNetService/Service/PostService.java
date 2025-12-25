@@ -12,6 +12,8 @@ public interface PostService {
     // Get a post by its ID
     Post getPostById(Integer id);
 
+    // Get all posts order by created date desc
+    List<Post> getAllPosts();
 
     // Get a posts by its User ID
     List<Post> getPostsByUserId(Integer useriId);
