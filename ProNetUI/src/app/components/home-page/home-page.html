@@ -4,9 +4,11 @@
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="upper-links">
-      <img src="assets/images/profile-pic.jpg" alt="profile" class="profile-img"/>
-      <h3>Umer Abubeker</h3>
-      <p>Software Engineer || Soccer Player || AI</p>
+      <img [src]="profilePic"
+        (error)="useDefaultPhoto()"
+      alt="profile" class="profile-img"/>
+      <h3>{{currentUser.firstName}} {{currentUser.lastName}}</h3>
+      <p>{{currentUser.headLine}}</p>
       <hr style="width: 100%; margin-top: 5px;border: 0.5px solid rgb(184, 184, 184);">
     </div>
     
@@ -19,7 +21,7 @@
     
       <div class="bottom-links">
         <a href="#"> <i class="fas fa-gear"></i> <span>Settings</span></a>
-        <a href="#"><i class="fas fa-arrow-right-from-bracket"></i><span>Log Out</span></a>
+        <a href="#" (click)="handleLogOut()"><i class="fas fa-arrow-right-from-bracket" ></i><span>Log Out</span></a>
       </div>
     </aside>
 

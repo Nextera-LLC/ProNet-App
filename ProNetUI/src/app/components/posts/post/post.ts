@@ -4,6 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { PostService } from '../../../services/posts/post-service';
 import { PostModal } from '../../../model/posts/post-modal';
 import { TimeAgoPipe } from '../../../dto/TimeAgoPipe';
+import { UserService } from '../../../services/user-service/user-service';
+import { User } from '../../../model/user';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-post',
@@ -12,9 +15,10 @@ import { TimeAgoPipe } from '../../../dto/TimeAgoPipe';
   templateUrl: './post.html',
   styleUrl: './post.css',
 })
-export class Post implements OnInit{
-
-  posts : PostModal[];
+export class Post implements OnInit {
+  posts: PostModal[];
+  profilePic: string;
+  currentUser: User;
 
   // ===== Modal State =====
   isModalOpen = false;
@@ -30,22 +34,38 @@ export class Post implements OnInit{
   // ===== TEMP: Replace with real logged-in user id (from Auth service later) =====
   userId = 3;
 
-  constructor(private postService: PostService) {}
+  constructor(
+    private postService: PostService,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
-  this.getAllPosts();
+    this.getAllPosts();
+    this.getCurrentUser();
   }
 
-  getAllPosts(){
+  getCurrentUser() {
+    this.userService.getCurrentUser().subscribe(
+      (response: User) => {
+        this.currentUser = response;
+        this.profilePic = `http://localhost:8080/users/${this.currentUser.userId}/profile-picture`;
+      },
+      (error: HttpErrorResponse) => {
+        
+      }
+    );
+  }
+
+  getAllPosts() {
     this.postService.getAllPosts().subscribe({
-      next: (posts) =>{
+      next: (posts) => {
         this.posts = posts;
         console.log(this.posts);
       },
-      error : (err)=>{
+      error: (err) => {
         console.error('Failed to get posts:', err);
-      }
-    })
+      },
+    });
   }
 
   // ===== Modal Controls =====
@@ -70,7 +90,8 @@ export class Post implements OnInit{
   // ===== Attach actions (mock) =====
   attachMock(type: 'photo' | 'video' | 'event'): void {
     // For now just show a small hint inside caption (optional)
-    const tag = type === 'photo' ? '[Photo]' : type === 'video' ? '[Video]' : '[Event]';
+    const tag =
+      type === 'photo' ? '[Photo]' : type === 'video' ? '[Video]' : '[Event]';
     if (!this.postText.includes(tag)) {
       this.postText = (this.postText + (this.postText ? ' ' : '') + tag).trim();
     }
@@ -97,7 +118,7 @@ export class Post implements OnInit{
       // visibility: 'PUBLIC',
     } as PostModal;
 
-    this.postService.addPost(payload, this.userId).subscribe({
+    this.postService.addPost(payload, this.currentUser.userId).subscribe({
       next: (created) => {
         // Reset composer
         this.postText = '';
@@ -118,5 +139,9 @@ export class Post implements OnInit{
         this.getAllPosts();
       },
     });
+  }
+
+  useDefaultPhoto() {
+    this.profilePic = 'assets/images/default-avatar.jpg';
   }
 }

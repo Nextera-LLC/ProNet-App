@@ -20,13 +20,16 @@ import { Router } from '@angular/router';
     FormsModule,
     ToastModule,
     MessageModule,
-  ],
+    
+],
   templateUrl: './user-log-in.html',
   styleUrl: './user-log-in.css',
 })
 export class UserLogIn {
 
   jwt : Jwt;
+
+  errorMessage : string ='';
 
   userCredential : LoginRequest = {
     email : '',
@@ -41,10 +44,14 @@ export class UserLogIn {
         (response : any)=>{
           this.jwt = response;
           localStorage.setItem("JwtToken",this.jwt.token);
+          console.log('after set => ' + localStorage.getItem('JwtToken'))
+
             this.router.navigate(['/home']);
+            this.errorMessage='';
         },
         (error : HttpErrorResponse) =>{
-          alert(error.error.message);
+          this.errorMessage = 'Invalid credential, please try again!';
+          
         }
       )
     }
