@@ -37,18 +37,21 @@ export class Post implements OnInit {
   constructor(
     private postService: PostService,
     private userService: UserService
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
-    this.getAllPosts();
     this.getCurrentUser();
+   
   }
 
   getCurrentUser() {
     this.userService.getCurrentUser().subscribe(
       (response: User) => {
         this.currentUser = response;
-        this.profilePic = `http://localhost:8080/users/${this.currentUser.userId}/profile-picture`;
+    this.profilePic = `http://localhost:8080/users/${this.currentUser.userId}/profile-picture`;
+    this.getAllPosts();
+
       },
       (error: HttpErrorResponse) => {
         

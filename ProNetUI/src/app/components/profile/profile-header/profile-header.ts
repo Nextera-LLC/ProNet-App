@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../services/user-service/user-service';
 import { UserProfile } from '../../../services/user-profile-service/user-profile';
 import { ProfileHeaderDto } from '../../../dto/profile-header-dto';
+import { User } from '../../../model/user';
 
 @Component({
   selector: 'app-profile-header',
@@ -23,30 +24,55 @@ export class ProfileHeader implements OnInit{
   editModalOpen = false;
 
   // User / data
-  userId = 1; // TODO: replace with actual user ID from auth/route
   photoSrc = '';
 
   // ProfileHeaderDto
-  profileHeaderDto : any;
+  profileHeaderDto : ProfileHeaderDto;
+  
+  // current logged in user
+  currentUser : User;
 
-  constructor(private http: HttpClient, private userProfile: UserProfile) {
-    // FIX: use /users not /user
-    this.photoSrc = `http://localhost:8080/users/${this.userId}/profile-picture`;
+  constructor(private http: HttpClient, private userProfile: UserProfile,
+              private userService : UserService
+  ) {
   }
 
   ngOnInit(): void {
-   this. profileHeaderDto = ProfileHeaderDto;
-    this.userProfile.getProfileHeaderInfo(this.userId).subscribe(
-      (response : ProfileHeaderDto)=>{
-        this.profileHeaderDto = response;
-        console.log(this.profileHeaderDto);
-        // this.profileHeaderDto.headline = 'Software Engineer || Angular || Spring Boot || Postgres';
-      },
-      (error : HttpErrorResponse) =>{
-      console.log(error.message)
-      }
-    )
+  this.getCurrentUser();
   }
+
+  /* ===== Get Logged in user ===== */
+
+  getCurrentUser(){
+    this.userService.getCurrentUser().subscribe({
+      next : (loggedInUser) =>{
+        this.currentUser = loggedInUser;
+
+        // getting user's profile header info
+        this.getProfileHeaderInfo(this.currentUser.userId);
+
+        // getting user profile pic
+        this.photoSrc = `http://localhost:8080/users/${this.currentUser.userId}/profile-picture`;
+      },
+      error : (err) =>{
+        console.log(err.message);
+      }
+    })
+  }
+  /* ===== Get user's profile header info ===== */
+
+getProfileHeaderInfo(userId : number){
+  this.userProfile.getProfileHeaderInfo(userId).subscribe(
+    (response : ProfileHeaderDto)=>{
+      this.profileHeaderDto = response;
+      console.log(this.profileHeaderDto);
+      // this.profileHeaderDto.headline = 'Software Engineer || Angular || Spring Boot || Postgres';
+    },
+    (error : HttpErrorResponse) =>{
+    console.log(error.message)
+    }
+  )
+}
 
   /* ===== Photo modal ===== */
   openPhotoModal() {
@@ -69,7 +95,7 @@ export class ProfileHeader implements OnInit{
 
   onDelete() {
     if (confirm('Are you sure you want to delete your profile image?')) {
-      this.userProfile.deleteProfilePicture(this.userId).subscribe({
+      this.userProfile.deleteProfilePicture(this.currentUser.userId).subscribe({
         next: () => {
           this.useDefaultPhoto();
           this.selectedFile = null;
@@ -85,19 +111,19 @@ export class ProfileHeader implements OnInit{
   }
 
   onSave() {
-    if (!this.selectedFile || !this.userId) return;
+    if (!this.selectedFile || !this.currentUser.userId) return;
 
     const formData = new FormData();
     formData.append('file', this.selectedFile);
 
     this.uploading = true;
 
-    this.userProfile.uploadProfilePicture(this.userId, formData).subscribe({
+    this.userProfile.uploadProfilePicture(this.currentUser.userId, formData).subscribe({
       next: () => {
         this.uploading = false;
         this.closePhotoModal();
         // refresh to backend URL so future loads hit server image (bust preview)
-        this.photoSrc = `http://localhost:8080/users/${this.userId}/profile-picture?ts=${Date.now()}`;
+        this.photoSrc = `http://localhost:8080/users/${this.currentUser.userId}/profile-picture?ts=${Date.now()}`;
         alert('Photo uploaded successfully');
       },
       error: (err) => {
@@ -142,10 +168,9 @@ export class ProfileHeader implements OnInit{
 
   saveProfileHeader() {
     
-    this.userProfile.saveProfileHeaderInfo(this.userId, this.profileHeaderDto).subscribe(
+    this.userProfile.saveProfileHeaderInfo(this.currentUser.userId, this.profileHeaderDto).subscribe(
       (response : ProfileHeaderDto)=>{
         this.profileHeaderDto = response;
-        this.profileHeaderDto.headline = 'Software Engineer || Angular || Spring Boot || Postgres';
       },
       (error : HttpErrorResponse) =>{
       console.log(error.message)

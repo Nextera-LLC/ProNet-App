@@ -1,18 +1,21 @@
 export class ProfileHeaderDto {
     // Basic info
-  firstName : 'Umer';
-  lastName : 'Abubeker';
-  headLine : 'Software Engineer || Angular || Spring Boot || Postgres';
+  firstName : string;
+  lastName : string;
+  headLine : string;
+
   // Location
   location :{
-  country : 'United States';
-  state : 'Minnesota';
-  city : 'Minneapolis';
+  country : string;
+  state : string;
+  city : string;
   }
+
   //contact
   contact:{
-    phone : '';
-    email : '';
-    linkedIn : '';
+    phone : string;
+    email : string;
+    linkedIn : string;
   }
+  
 }

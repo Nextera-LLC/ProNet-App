@@ -17,10 +17,10 @@ export class AboutCard implements AfterViewInit, OnInit {
   isExpanded = false;
 
   aboutText = '';
-
+  currentUser : User;
   editVisible = false;
   tempAbout= '';
-  userId = 1;
+
 
   @ViewChild('aboutTextarea') aboutTextarea?: ElementRef<HTMLTextAreaElement>;
   @ViewChild('modalRoot') modalRoot?: ElementRef<HTMLDivElement>;
@@ -28,16 +28,35 @@ export class AboutCard implements AfterViewInit, OnInit {
   constructor(private userService : UserService, private userProfileService : UserProfile){}
 
   ngOnInit(): void {
-      this.userProfileService.getProfileBio(this.userId).subscribe(
-        (response : string)=>{
-          console.log(response);
-          this.aboutText = response;
-        },
-        (error : HttpErrorResponse)=>{
-          alert(error.message);
-        }
-      )
+    this.getCurrentUser();
+     
   }
+
+  /* ===== Get Logged in user ===== */
+  getCurrentUser(){
+    this.userService.getCurrentUser().subscribe({
+      next : (loggedInUser) =>{
+        this.currentUser = loggedInUser;
+        this.getProfileBio(this.currentUser.userId);
+      },
+      error : (err) =>{
+        console.log(err.message);
+      }
+    })
+  }
+ 
+  /* ===== Get user's profile bio ===== */
+  getProfileBio(userId : number){
+  this.userProfileService.getProfileBio(userId).subscribe(
+    (response : string)=>{
+      console.log(response);
+      this.aboutText = response;
+    },
+    (error : HttpErrorResponse)=>{
+      alert(error.message);
+    }
+  )
+}
 
   ngAfterViewInit(): void {
     // no-op; focus handled on open
@@ -61,7 +80,7 @@ export class AboutCard implements AfterViewInit, OnInit {
   saveAbout() {
     // if (!this.canSave()) return;
     this.aboutText = this.tempAbout.trim();
-    this.userProfileService.saveProfileBio(1, this.aboutText).subscribe(
+    this.userProfileService.saveProfileBio(this.currentUser.userId, this.aboutText).subscribe(
       {
         next: (response) => {
           this.aboutText = response;

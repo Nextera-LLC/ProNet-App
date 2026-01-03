@@ -1,15 +1,16 @@
-<body>
+
   <div class="container">
  
     <!-- Sidebar -->
     <aside class="sidebar">
-      <div class="upper-links">
-      <img [src]="profilePic"
-        (error)="useDefaultPhoto()"
+      <div class="upper-links" (click)="redirectToProfilePage()">
+      <img  
+        [src]="profilePic || 'assets/images/default-avatar.jpg'"
       alt="profile" class="profile-img"/>
-      <h3>{{currentUser.firstName}} {{currentUser.lastName}}</h3>
-      <p>{{currentUser.headLine}}</p>
-      <hr style="width: 100%; margin-top: 5px;border: 0.5px solid rgb(184, 184, 184);">
+      
+      <h3>{{currentUser?.firstName}} {{currentUser?.lastName}}</h3>
+      <p class="headline">{{currentUser?.headline}}</p>
+      <hr style="width: 100%; margin-top: 8px;border: 0.5px solid rgb(184, 184, 184);">
     </div>
     
       <nav class="sidebar-links">
@@ -32,4 +33,4 @@
 
          </main>
   </div>
-</body>
+

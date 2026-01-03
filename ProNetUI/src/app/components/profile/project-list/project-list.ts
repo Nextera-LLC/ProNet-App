@@ -5,6 +5,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 import { Project } from '../../../model/profile/project';
 import { ProjectService } from '../../../services/user-profile-service/project-service';
+import { User } from '../../../model/user';
+import { UserService } from '../../../services/user-service/user-service';
 
 @Component({
   selector: 'app-project-list',
@@ -17,23 +19,37 @@ export class ProjectList implements OnInit {
 
   modalOpen = false;
   isEditMode = false;
-  userId = 1;
+  currentUser : User;
 
   projects: Project[] = [];
   model: Project = this.createEmptyProject();
 
-  constructor(private projectService: ProjectService) {}
+  constructor(private projectService: ProjectService, private userService : UserService) {}
 
   @ViewChild('modalRoot') modalRoot?: ElementRef<HTMLDivElement>;
   @ViewChild('firstInput') firstInput?: ElementRef<HTMLInputElement>;
 
   ngOnInit(): void {
-    this.loadProjects();
+    this.getCurrentUser();
   }
 
+  
+    /* ===== Get Logged in user ===== */
+    getCurrentUser(){
+      this.userService.getCurrentUser().subscribe({
+        next : (loggedInUser) =>{
+          this.currentUser = loggedInUser;
+          this.loadProjects(this.currentUser.userId);
+        },
+        error : (err) =>{
+          console.log(err.message);
+        }
+      })
+    }
+
   /* ========== LOAD LIST ========== */
-  private loadProjects(): void {
-    this.projectService.getAllProjects(this.userId).subscribe(
+  private loadProjects(userId : number): void {
+    this.projectService.getAllProjects(userId).subscribe(
       (res: Project[]) => {
         this.projects = res;
         console.log('projects', res);
@@ -48,7 +64,7 @@ export class ProjectList implements OnInit {
   private createEmptyProject(): Project {
     return {
       projectId: null as any,   // or undefined depending on your model
-      userId: this.userId,
+      userId:  this.currentUser?.userId,
       title: '',
       description: '',
       url: '',
@@ -119,7 +135,7 @@ export class ProjectList implements OnInit {
 
     const payload: Project = {
       projectId: this.model.projectId,
-      userId: this.userId,
+      userId:  this.currentUser?.userId,
       title: this.model.title.trim(),
       description: this.model.description?.trim() || '',
       url: this.model.url?.trim() || '',
@@ -133,7 +149,7 @@ export class ProjectList implements OnInit {
       // UPDATE
       this.projectService.updateProject(payload, payload.projectId).subscribe(
         () => {
-          this.loadProjects();
+          this.loadProjects( this.currentUser.userId);
           this.cancelEdit();
           alert("Project updated!")
 
@@ -146,7 +162,7 @@ export class ProjectList implements OnInit {
       // ADD
       this.projectService.addProject(payload).subscribe(
         () => {
-          this.loadProjects();
+          this.loadProjects( this.currentUser.userId);
           this.cancelEdit();
           alert("Project added!")
         },
@@ -168,7 +184,7 @@ export class ProjectList implements OnInit {
     if (canDelete) {
       this.projectService.deleteProject(this.model.projectId).subscribe(
         () => {
-          this.loadProjects();
+          this.loadProjects( this.currentUser.userId);
           this.cancelEdit();
         },
         (err: HttpErrorResponse) => {

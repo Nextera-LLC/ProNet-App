@@ -1,9 +1,11 @@
 // src/app/skills-list/skills-list.ts
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserSkill } from '../../../model/profile/user-skill';
 import { SkillService } from '../../../services/user-profile-service/skill-service';
+import { User } from '../../../model/user';
+import { UserService } from '../../../services/user-service/user-service';
 
 
 @Component({
@@ -13,9 +15,8 @@ import { SkillService } from '../../../services/user-profile-service/skill-servi
   templateUrl: './skills-list.html',
   styleUrls: ['./skills-list.css']
 })
-export class SkillsList {
-  // TODO: replace with real logged-in user ID
-  userId: number = 1;
+export class SkillsList implements OnInit {
+  currentUser :User;
 
   skills: UserSkill[] = [];
   primarySkills: UserSkill[] = [];
@@ -34,17 +35,34 @@ export class SkillsList {
   // Currently editing skill
   editingSkill: UserSkill | null = null;
 
-  constructor(private skillService: SkillService) {
-    this.loadSkills();
+  constructor(private skillService: SkillService, private userService : UserService) {
+  
   }
+  ngOnInit(): void {
+    this.getCurrentUser();
+  }
+
+  
+    /* ===== Get Logged in user ===== */
+    getCurrentUser(){
+      this.userService.getCurrentUser().subscribe({
+        next : (loggedInUser) =>{
+          this.currentUser = loggedInUser;
+          this.loadSkills(this.currentUser.userId);
+        },
+        error : (err) =>{
+          console.log(err.message);
+        }
+      })
+    }
 
   get totalSkillsCount(): number {
     return this.skills.length;
   }
 
   /* ========== LOAD SKILLS ========== */
-  private loadSkills(): void {
-    this.skillService.getAllUserSkills(this.userId).subscribe({
+  private loadSkills(userId :number): void {
+    this.skillService.getAllUserSkills(userId).subscribe({
       next: (skills) => {
         this.skills = skills || [];
         this.splitSkills();
@@ -102,7 +120,7 @@ export class SkillsList {
 
     if (!this.isEditMode) {
       // CREATE
-      this.skillService.addUserSkill(payload, this.userId).subscribe({
+      this.skillService.addUserSkill(payload, this.currentUser?.userId).subscribe({
         next: (created) => {
           this.skills.push(created);
           this.splitSkills();
@@ -114,7 +132,7 @@ export class SkillsList {
       });
     } else if (this.editingSkill) {
       // UPDATE
-      this.skillService.updateUserSkill(payload, this.userId).subscribe({
+      this.skillService.updateUserSkill(payload, this.currentUser?.userId).subscribe({
         next: (updated) => {
           const idx = this.skills.findIndex(
             (s) => s.userSkillId === updated.userSkillId
@@ -136,7 +154,7 @@ export class SkillsList {
   deleteSkill(): void {
     if (!this.editingSkill) return;
 
-    this.skillService.deleteUserSkill(this.editingSkill, this.userId).subscribe({
+    this.skillService.deleteUserSkill(this.editingSkill, this.currentUser?.userId).subscribe({
       next: () => {
         this.skills = this.skills.filter(
           (s) => s.userSkillId !== this.editingSkill!.userSkillId

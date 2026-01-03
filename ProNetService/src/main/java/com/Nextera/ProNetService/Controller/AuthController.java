@@ -17,7 +17,7 @@ public class AuthController {
     @Autowired private AuthService authService;
 
    @PostMapping("/register")
-   public ResponseEntity<User> register (@RequestBody RegisterRequest request){
+   public ResponseEntity<JwtDto> register (@RequestBody RegisterRequest request){
        return ResponseEntity.ok(authService.register(request));
    }
 

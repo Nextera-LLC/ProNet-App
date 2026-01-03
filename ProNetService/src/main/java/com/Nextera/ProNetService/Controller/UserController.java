@@ -3,12 +3,14 @@ package com.Nextera.ProNetService.Controller;
 import com.Nextera.ProNetService.Model.User;
 import com.Nextera.ProNetService.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -53,23 +55,38 @@ public class UserController {
     }
 
     @GetMapping("/{id}/profile-picture")
-    public ResponseEntity<byte[]> getProfilePicture(@PathVariable Integer id) {
+    public ResponseEntity<byte[]> getProfilePicture(@PathVariable Integer id)  {
         Optional<User> userOpt = userService.getProfilePicture(id);
 
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-            if (user.getProfilePicture() != null) {
-                System.out.println("Returning profile picture for user: " + id);
+            if (user.getProfilePicture() != null && user.getProfilePicture().length > 0) {
                 return ResponseEntity.ok()
                         .header("Content-Type", user.getProfilePictureContentType())
                         .body(user.getProfilePicture());
-            } else {
-                System.out.println("User has no profile picture: " + id);
-                return ResponseEntity.notFound().build();
             }
-        } else {
-            System.out.println("User not found: " + id);
-            return ResponseEntity.notFound().build();
+            // user exists but no picture -> return default
+            return defaultAvatarResponse();
         }
+
+        // user not found
+        return ResponseEntity.notFound().build();
     }
+
+    private ResponseEntity<byte[]> defaultAvatarResponse() {
+        byte[] bytes = null;
+
+        try{
+           ClassPathResource imgFile = new ClassPathResource("static/default-avatar.jpg");
+           bytes = imgFile.getInputStream().readAllBytes();
+       }
+       catch (IOException e){
+           throw new RuntimeException("Default avatar image doesn't exist");
+       }
+
+        return ResponseEntity.ok()
+                .header("Content-Type", "image/png")
+                .body(bytes);
+    }
+
 }

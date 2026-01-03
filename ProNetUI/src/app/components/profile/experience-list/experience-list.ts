@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Experience } from '../../../model/profile/experience';
 import { ExperienceService } from '../../../services/user-profile-service/experience-service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { User } from '../../../model/user';
+import { UserService } from '../../../services/user-service/user-service';
 
 @Component({
   selector: 'app-experience-list',
@@ -16,22 +18,35 @@ export class ExperienceList implements OnInit {
 
   modalOpen = false;
   isEditMode = false;               // 👈 to know if we are adding or editing
-  userId = 1;
+  currentUser : User;
 
   experiences: Experience[] = [];   // initialize
   model: Experience = this.createEmptyExperience();
 
-  constructor(private experienceService: ExperienceService) {}
+  constructor(private experienceService: ExperienceService, private userService : UserService) {}
 
   @ViewChild('modalRoot') modalRoot?: ElementRef<HTMLDivElement>;
   @ViewChild('firstInput') firstInput?: ElementRef<HTMLInputElement>;
 
   ngOnInit(): void {
-    this.loadExperiences();
+    this.getCurrentUser();
   }
 
-  private loadExperiences(): void {
-    this.experienceService.getAllExperiences(this.userId).subscribe(
+    /* ===== Get Logged in user ===== */
+    getCurrentUser(){
+      this.userService.getCurrentUser().subscribe({
+        next : (loggedInUser) =>{
+          this.currentUser = loggedInUser;
+          this.loadExperiences(this.currentUser.userId);
+        },
+        error : (err) =>{
+          console.log(err.message);
+        }
+      })
+    }
+
+  private loadExperiences(userId : number): void {
+    this.experienceService.getAllExperiences(userId).subscribe(
       (response: Experience[]) => {
         this.experiences = response;
         console.log('experiences', response);
@@ -45,7 +60,7 @@ export class ExperienceList implements OnInit {
   private createEmptyExperience(): Experience {
     return {
       experienceId: null as any,   // or undefined depending on your model
-      userId: this.userId,
+      userId: this.currentUser?.userId,
       companyName: '',
       title: '',
       startDate: '',
@@ -128,7 +143,7 @@ export class ExperienceList implements OnInit {
 
     const payload: Experience = {
       experienceId: this.model.experienceId,
-      userId: this.userId, // make sure userId is sent
+      userId: this.currentUser?.userId, // make sure userId is sent
       companyName: this.model.companyName.trim(),
       title: this.model.title.trim(),
       startDate: this.model.startDate,
@@ -143,7 +158,7 @@ export class ExperienceList implements OnInit {
       this.experienceService.updateExperience(payload, payload.experienceId).subscribe(
         (response: Experience) => {
           // update list locally or reload
-          this.loadExperiences();
+          this.loadExperiences(this.currentUser.userId);
           this.cancelEdit();
           alert("Experience updated!")
         },
@@ -156,7 +171,7 @@ export class ExperienceList implements OnInit {
       this.experienceService.addExperience(payload).subscribe(
         (response: Experience) => {
           // push new item or reload
-          this.loadExperiences();
+          this.loadExperiences(this.currentUser.userId);
           this.cancelEdit();
           alert("Experience added!")
 
@@ -178,7 +193,7 @@ export class ExperienceList implements OnInit {
     if (canDelete) {
       this.experienceService.deleteExperience(this.model.experienceId).subscribe(
         () => {
-          this.loadExperiences();
+          this.loadExperiences(this.currentUser.userId);
           this.cancelEdit();
         },
         (error: HttpErrorResponse) => {

@@ -5,6 +5,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 import { Education } from '../../../model/profile/education';
 import { EducationService } from '../../../services/user-profile-service/education-service';
+import { User } from '../../../model/user';
+import { UserService } from '../../../services/user-service/user-service';
 
 @Component({
   selector: 'app-education-list',
@@ -17,23 +19,38 @@ export class EducationList implements OnInit {
 
   modalOpen = false;
   isEditMode = false;
-  userId = 1;
+  currentUser : User;
 
   educations: Education[] = [];
   model: Education = this.createEmptyEducation();
 
-  constructor(private educationService: EducationService) {}
+  constructor(private educationService: EducationService,
+              private userService : UserService
+  ) {}
 
   @ViewChild('modalRoot') modalRoot?: ElementRef<HTMLDivElement>;
   @ViewChild('firstInput') firstInput?: ElementRef<HTMLInputElement>;
 
   ngOnInit(): void {
-    this.loadEducations();
+    this.getCurrentUser();
+  }
+
+  /* ===== Get Logged in user ===== */
+  getCurrentUser(){
+    this.userService.getCurrentUser().subscribe({
+      next : (loggedInUser) =>{
+        this.currentUser = loggedInUser;
+        this.loadEducations(this.currentUser.userId);
+      },
+      error : (err) =>{
+        console.log(err.message);
+      }
+    })
   }
 
   /* ========== LOAD LIST ========== */
-  private loadEducations(): void {
-    this.educationService.getAllEducations(this.userId).subscribe(
+  private loadEducations(userId : number): void {
+    this.educationService.getAllEducations(userId).subscribe(
       (response: Education[]) => {
         this.educations = response;
         console.log('educations', response);
@@ -48,7 +65,7 @@ export class EducationList implements OnInit {
   private createEmptyEducation(): Education {
     return {
       educationId: null as any,    // or undefined depending on your model
-      userId: this.userId,
+      userId: this.currentUser?.userId,
       institution: '',
       degree: '',
       fieldOfStudy: '',
@@ -125,7 +142,7 @@ export class EducationList implements OnInit {
 
     const payload: Education = {
       educationId: this.model.educationId,
-      userId: this.userId,
+      userId: this.currentUser?.userId,
       institution: this.model.institution.trim(),
       degree: this.model.degree?.trim() || '',
       fieldOfStudy: this.model.fieldOfStudy?.trim() || '',
@@ -139,7 +156,7 @@ export class EducationList implements OnInit {
       // UPDATE
       this.educationService.updateEducation(payload, payload.educationId).subscribe(
         (response: Education) => {
-          this.loadEducations();
+          this.loadEducations(this.currentUser.userId);
           this.cancelEdit();
           alert("Education updated!")
         },
@@ -151,7 +168,7 @@ export class EducationList implements OnInit {
       // ADD
       this.educationService.addEducation(payload).subscribe(
         (response: Education) => {
-          this.loadEducations();
+          this.loadEducations(this.currentUser.userId);
           this.cancelEdit();
           alert("Education added!")
         },
@@ -173,7 +190,7 @@ export class EducationList implements OnInit {
     if (canDelete) {
       this.educationService.deleteEducation(this.model.educationId).subscribe(
         () => {
-          this.loadEducations();
+          this.loadEducations(this.currentUser.userId);
           this.cancelEdit();
         },
         (error: HttpErrorResponse) => {

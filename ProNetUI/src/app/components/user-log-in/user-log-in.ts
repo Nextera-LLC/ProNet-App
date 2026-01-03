@@ -44,7 +44,6 @@ export class UserLogIn {
         (response : any)=>{
           this.jwt = response;
           localStorage.setItem("JwtToken",this.jwt.token);
-          console.log('after set => ' + localStorage.getItem('JwtToken'))
 
             this.router.navigate(['/home']);
             this.errorMessage='';
