@@ -78,7 +78,7 @@ jobs:
           DB_URL: ${{ secrets.DB_URL }}
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        run: ./gradlew clean test --no-daemon
+        run: ./gradlew clean build --no-daemon
 
       - name: Upload backend artifact
         uses: actions/upload-artifact@v4
