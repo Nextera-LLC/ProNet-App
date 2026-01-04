@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -118,6 +120,8 @@ class UserControllerTest {
         verify(userService, times(1)).getProfilePicture(1);
     }
 
+
+
     @Test
     void testGetProfilePictureNoImage() {
         User user = new User();
@@ -128,7 +132,19 @@ class UserControllerTest {
 
         ResponseEntity<byte[]> response = userController.getProfilePicture(1);
 
-        assertEquals(404, response.getStatusCodeValue());
+        // Expect OK, not 404
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        // Ensure body is returned
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().length > 0);
+
+        // Ensure content type is correct
+        assertEquals("image/png", response.getHeaders().getFirst("Content-Type"));
+
         verify(userService, times(1)).getProfilePicture(1);
     }
+
+
+
 }
