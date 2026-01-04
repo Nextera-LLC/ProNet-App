@@ -1,5 +1,6 @@
 package com.Nextera.ProNetService.Service;
 
+import com.Nextera.ProNetService.Exceptions.UserAlreadyExistsException;
 import com.Nextera.ProNetService.Model.User;
 import com.Nextera.ProNetService.Repository.UserRepository;
 import com.Nextera.ProNetService.dto.JwtDto;
@@ -19,10 +20,9 @@ public class AuthService {
     @Autowired private JwtService jwtService;
     @Autowired private PasswordEncoder passwordEncoder;
 
-    public User register(RegisterRequest request) {
+    public JwtDto register(RegisterRequest request) {
         if (!userRepo.findByEmail(request.getEmail()).isEmpty()) {
-            throw new RuntimeException("User already exists with this email, Please try with new Email");
-
+            throw new UserAlreadyExistsException("Email already exists");
         } else {
             User user = new User();
             user.setEmail(request.getEmail());
@@ -31,7 +31,9 @@ public class AuthService {
             user.setFirstName(request.getFirstName());
             user.setLastName(request.getLastName());
 
-            return userRepo.save(user);
+            userRepo.save(user);
+
+            return generateJwtToken(request.getEmail());
         }
     }
     public JwtDto login(LoginRequest loginRequest) {
@@ -44,8 +46,14 @@ public class AuthService {
             throw new RuntimeException("Invalid credentials");
         }
 
-        JwtDto jwt = new JwtDto();
-            jwt.setToken(jwtService.generateToken(loginRequest.getEmail()));
-            return jwt;
+       return generateJwtToken(loginRequest.getEmail());
         }
+
+    private JwtDto generateJwtToken(String userEmail){
+        JwtDto jwt = new JwtDto();
+        jwt.setToken(jwtService.generateToken(userEmail));
+        return jwt;
     }
+
+    }
+

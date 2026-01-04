@@ -21,8 +21,8 @@ export class UserService {
     return this.http.get<User[]>(`${this.BASE_URL}/users/all`);
   } 
 
-  registerUser(user : RegisterRequest) : Observable<User>{
-    return this.http.post<User>(`${this.BASE_URL}/auth/register`,user);
+  registerUser(user : RegisterRequest) : Observable<Jwt>{
+    return this.http.post<Jwt>(`${this.BASE_URL}/auth/register`,user);
   }
 
   logInUser(userCredential : LoginRequest) : Observable<Jwt>{

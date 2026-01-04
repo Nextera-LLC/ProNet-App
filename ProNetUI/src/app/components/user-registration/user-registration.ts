@@ -10,6 +10,7 @@ import { UserService } from '../../services/user-service/user-service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RegisterRequest } from '../../dto/register-request';
 import { Router } from '@angular/router';
+import { Jwt } from '../../dto/jwt';
 
 @Component({
   selector: 'app-user-registration',
@@ -28,22 +29,16 @@ export class UserRegistration implements OnInit{
     role: 'USER'
   };
 
+  jwt : Jwt;
   doesPasswordMatch = true;
   registeredUser : User;
   users : User[];
+  errorMessage: string = '';
+
   constructor(private userService : UserService, private router : Router){}
 
 
   ngOnInit(): void {
-    this.userService.getUsers().subscribe(
-      (response : User[]) =>{
-        this.users = response;
-        console.log(this.users);
-      },
-      (error : HttpErrorResponse)=>{
-        console.error(error.message);
-      }
-    )
   }
   onSubmit(form: any) {
     if (form.valid) {
@@ -55,23 +50,27 @@ export class UserRegistration implements OnInit{
           this.doesPasswordMatch = true;
 
         // sending post request to register user
-        this.userService.registerUser(this.user).subscribe(
-          (response : User)=>{
-            this.registeredUser = response;
+        this.userService.registerUser(this.user).subscribe({
+          next: (response) => { 
+            localStorage.setItem("JwtToken",response.token);
             this.router.navigate(['/home']);
-
-          },
-          (error : HttpErrorResponse) =>{
-           alert(error.error.message);
-//console.log(error);
-          }
-        )
+            this.errorMessage = '';
+           },
+          error: err => {
+            if (err.status === 409) {
+              this.errorMessage = err.error.message;
+            }
+        }
+        });
+      
 
       }
+   
+  }
 
 
 
 
     }
 }
-}
+

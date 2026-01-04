@@ -16,17 +16,24 @@ export class HomePage implements OnInit{
   currentUser : User;
   profilePic : string;
 
-  constructor(private userService : UserService, private router : Router){}
+  constructor(private userService : UserService, private router : Router){
+  }
   
   ngOnInit(): void {
-   this.userService.getCurrentUser().subscribe(
-    (response : User)=>{
-      this.currentUser = response;
-this.profilePic = `http://localhost:8080/users/${this.currentUser.userId}/profile-picture`;
-    },
-    (error : HttpErrorResponse) =>{
-    }
-   )
+    this.getCurrentUser();
+
+  }
+
+  getCurrentUser(){
+    this.userService.getCurrentUser().subscribe(
+      (response : User)=>{
+        this.currentUser = response;
+        this.profilePic = `http://localhost:8080/users/${this.currentUser.userId}/profile-picture`;
+        console.log(this.currentUser)
+      },
+      (error : HttpErrorResponse) =>{
+      }
+     )
   }
 
   handleLogOut(){
@@ -41,5 +48,8 @@ this.profilePic = `http://localhost:8080/users/${this.currentUser.userId}/profil
 
     useDefaultPhoto(){
       this.profilePic = 'assets/images/default-avatar.jpg';
+    }
+    redirectToProfilePage(){
+      this.router.navigate(['/profile']);
     }
 }

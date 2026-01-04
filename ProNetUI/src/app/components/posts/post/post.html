@@ -1,8 +1,7 @@
     <!-- Create Post -->
     <section class="create-post">
         <img
-        [src]="profilePic"
-        (error)="useDefaultPhoto()"
+        [src]="profilePic || 'assets/images/default-avatar.jpg'"
           alt="mini-profile"
           class="mini-profile"
         />
@@ -28,7 +27,10 @@
   *ngFor="let post of posts let i = index"
   >
     <div class="post-header">
-      <img src="http://localhost:8080/users/{{post.user?.userId}}/profile-picture"/>
+      <img [src]="post.user?.userId
+      ? 'http://localhost:8080/users/' + post.user?.userId + '/profile-picture'
+      : 'assets/images/default-avatar.jpg'"
+      />
       <div>
         <strong>{{post.user?.firstName}} {{post.user?.lastName}}</strong>
         <p>{{post.user?.headLine}}</p>
@@ -69,8 +71,7 @@
           <header class="modal-header">
             <div class="header-left">
               <img
-              [src]="profilePic"
-              (error)="useDefaultPhoto()"
+              [src]="profilePic || 'assets/images/default-avatar.jpg'"
                 alt="profile"
                 class="modal-avatar"
               />

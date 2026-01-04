@@ -14,4 +14,7 @@ export class App {
   isAuthRoute(): boolean {
     return ['/login', '/sign-up','/'].includes(this.router.url);
   }
+  handleProNetLogo(){
+    this.router.navigate(['/home'])
+  }
 }

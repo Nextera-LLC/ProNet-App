@@ -6,6 +6,6 @@ export class User {
     password: String;
     confirmPassword: String;
     bio : string;
-    headLine : String;
+    headline : String;
     role: String;
 }

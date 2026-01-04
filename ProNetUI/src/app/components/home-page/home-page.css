@@ -33,17 +33,28 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 10px;
+    padding-top: 10px;cursor: pointer;
   }
 
   .upper-links h3{
-    margin: 5px 0px;
+    margin: 10px 0px;
   }
 
   .upper-links p{
     margin: 0;
     font-size: 14px;
   
+  }
+
+  .headline {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;        /* limit to 2 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  
+    line-height: 1.4;
+    max-height: calc(1.4em * 2); /* ensures exact 2-line height */
   }
   
   .profile-img {
@@ -54,7 +65,7 @@
     display: block;
   }
   
-  
+
   .sidebar-links {
     margin-top: 10px;
     display: flex;

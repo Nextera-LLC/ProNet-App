@@ -36,9 +36,10 @@ public class User {
 
     private String role;
 
-    @Column(name = "headline")
+    @Column(name = "headline", columnDefinition = "TEXT")
     private String headline;
 
+    @Column(columnDefinition = "TEXT")
     private String bio;
 
     @Column(name = "profile_picture")

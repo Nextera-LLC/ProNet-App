@@ -1,9 +1,8 @@
 <section class="card profile-header" aria-label="Profile header">
   <div class="banner" role="img" aria-label="Cover image"></div>
+  
   <div class="header-inner">
-     <!-- Edit pencil top right -->
-  <button class="edit-btn-top-right" (click)="openEditModal()" aria-label="Edit profile header">✎</button>
-
+     
     <!-- Trigger (profile image -> photo modal) -->
     <button
       class="profile-avatar-btn"
@@ -20,16 +19,19 @@
 
     <div class="identity">
     
-      <div class="name">{{ profileHeaderDto.firstName }} {{ profileHeaderDto.lastName }}</div>
-      <div class="headline">{{ profileHeaderDto.headLine }}</div>
-      <div class="location">{{ profileHeaderDto.location.city }}{{ profileHeaderDto.location.city && profileHeaderDto.location.state ? ', ' : '' }}{{ profileHeaderDto.location.state }}{{ (profileHeaderDto.location.city || profileHeaderDto.location.state) && profileHeaderDto.location.country ? ', ' : '' }}{{ profileHeaderDto.location.country }}</div>
+      <div class="name">{{ profileHeaderDto?.firstName }} {{ profileHeaderDto?.lastName }}</div>
+      <div class="headline">{{ profileHeaderDto?.headLine }}</div>
+      <div class="location">{{ profileHeaderDto?.location?.city }}{{ profileHeaderDto?.location?.city && profileHeaderDto?.location?.state ? ', ' : '' }}{{ profileHeaderDto?.location?.state }}{{ (profileHeaderDto?.location?.city || profileHeaderDto?.location?.state) && profileHeaderDto?.location?.country ? ', ' : '' }}{{ profileHeaderDto?.location?.country }}</div>
     </div>
-
+ 
     <div class="actions" aria-label="Profile actions">
       <button class="btn primary">Connect</button>
       <button class="btn-msg">Message</button>
       <button class="btn primary">More ▾</button>
     </div>
+   <!-- Edit pencil top right -->
+ <button class="edit-btn-top-right" (click)="openEditModal()" aria-label="Edit profile header">✎</button>
+
   </div>
 </section>
 
