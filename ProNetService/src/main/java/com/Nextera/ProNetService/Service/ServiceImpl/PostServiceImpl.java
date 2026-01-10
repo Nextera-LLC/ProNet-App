@@ -26,9 +26,6 @@ public class PostServiceImpl implements PostService {
             throw new  IllegalArgumentException(" Post cannot be empty");
         }
 
-       if(post.getCaption().length()>500){
-           throw new IllegalArgumentException("Post caption cannot exceed more than 500 character");
-       }
         // Set creation and update timestamps using Date
         Date now = new Date();
         post.setCreatedDate(now);

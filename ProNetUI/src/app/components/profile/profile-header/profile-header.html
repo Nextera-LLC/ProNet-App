@@ -98,11 +98,11 @@
         <legend>Basic info</legend>
         <div class="grid grid-2">
           <label class="field">
-            <span>First name *</span>
+            <span>First name <span class="req">*</span></span>
             <input type="text" [(ngModel)]="profileHeaderDto.firstName" name="firstName" placeholder="First name" />
           </label>
           <label class="field">
-            <span>Last name *</span>
+            <span>Last name <span class="req">*</span></span>
             <input type="text" [(ngModel)]="profileHeaderDto.lastName" name="lastName" placeholder="Last name" />
           </label>
         </div>
@@ -117,7 +117,7 @@
         <legend>Location</legend>
         <div class="grid grid-3">
           <label class="field">
-            <span>Country *</span>
+            <span>Country <span class="req">*</span></span>
             <input type="text" [(ngModel)]="profileHeaderDto.location.country" name="country" placeholder="United States" />
           </label>
           <label class="field">
@@ -140,7 +140,7 @@
             <input type="tel" [(ngModel)]="profileHeaderDto.contact.phone" name="phone" placeholder="+1 (555) 555‑5555" />
           </label>
           <label class="field">
-            <span>Email *</span>
+            <span>Email <span class="req">*</span></span>
             <input type="email" required="" [(ngModel)]="profileHeaderDto.contact.email" name="email" placeholder="name@example.com" />
           </label>
           <label class="field">
@@ -152,9 +152,9 @@
     </form>
 
     <footer class="modal-actions">
-      <button class="btn ghost" type="button" (click)="closeEditModal()">Cancel</button>
+      <button class="btn btn-secondary" type="button" (click)="closeEditModal()">Cancel</button>
       <!-- <button class="btn" type="button" (click)="saveProfileHeader()">Save as draft</button> -->
-      <button class="btn primary" type="submit" (click)="saveProfileHeader()">Save</button>
+      <button class="btn primary" type="submit" [disabled]="!canSaveEducation()">Save</button>
     </footer>
   </div>
 </div>

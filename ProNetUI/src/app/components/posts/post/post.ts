@@ -28,7 +28,7 @@ export class Post implements OnInit {
   linkPreviewUrl: string | null = null;
 
   // ===== Limits / UI =====
-  maxChars = 3000;
+  maxChars = 1000;
   isSubmitting = false;
 
   // ===== TEMP: Replace with real logged-in user id (from Auth service later) =====

@@ -166,8 +166,21 @@ getProfileHeaderInfo(userId : number){
     document.body.style.overflow = '';
   }
 
-  saveProfileHeader() {
+   /* ========== VALIDATION ========== */
+   canSaveEducation(): boolean {
+    const dto = this.profileHeaderDto;
+
+    const firstName = dto?.firstName?.trim() ?? '';
+    const lastName  = dto?.lastName?.trim() ?? '';
+    const country   = dto?.location?.country?.trim() ?? '';
+    const email     = dto?.contact?.email?.trim() ?? '';  
+  
+    return !!(firstName && lastName && country && email);
+  }
+
+  saveProfileHeader(){
     
+    if(!this.canSaveEducation) return;
     this.userProfile.saveProfileHeaderInfo(this.currentUser.userId, this.profileHeaderDto).subscribe(
       (response : ProfileHeaderDto)=>{
         this.profileHeaderDto = response;

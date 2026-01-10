@@ -25,7 +25,17 @@
           <div class="entry-title">
             {{ project.title }}
           </div>
-
+     <!-- Dates + Field -->
+     <div class="entry-time">
+      {{ project.startDate | date: 'MMM yyyy' }}
+      –
+      {{
+        project.endDate
+          ? (project.endDate | date: 'MMM yyyy')
+          : 'Present'
+      }}
+     
+    </div>
           <p class="muted" *ngIf="project.description">
             {{ project.description }}
           </p>
