@@ -92,6 +92,7 @@
             <textarea
               class="post-textarea"
               [(ngModel)]="postText"
+              [maxlength]="maxChars"
               rows="6"
               placeholder="What do you want to talk about?"
             ></textarea>
