@@ -78,7 +78,7 @@ export class AboutCard implements AfterViewInit, OnInit {
   }
 
   saveAbout() {
-    // if (!this.canSave()) return;
+    if (!this.canSave()) return;
     this.aboutText = this.tempAbout.trim();
     this.userProfileService.saveProfileBio(this.currentUser.userId, this.aboutText).subscribe(
       {
@@ -94,10 +94,10 @@ export class AboutCard implements AfterViewInit, OnInit {
     this.editVisible = false;
   }
 
-  // canSave(): boolean {
-  //   const v = (this.tempAbout ?? '').trim();
-  //   return v.length >= 10 && v.length <= 1000;
-  // }
+  canSave(): boolean {
+    const v = (this.tempAbout ?? '').trim();
+    return v.length >= 10 && v.length <= 1000;
+  }
 
   // Close only when clicking outside the modal panel
   backdropClick(event: MouseEvent) {
