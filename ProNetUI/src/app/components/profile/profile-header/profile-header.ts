@@ -28,7 +28,7 @@ export class ProfileHeader implements OnInit{
 
   // ProfileHeaderDto
   profileHeaderDto : ProfileHeaderDto;
-  
+
   // current logged in user
   currentUser : User;
 
@@ -173,24 +173,26 @@ getProfileHeaderInfo(userId : number){
     const firstName = dto?.firstName?.trim() ?? '';
     const lastName  = dto?.lastName?.trim() ?? '';
     const country   = dto?.location?.country?.trim() ?? '';
-    const email     = dto?.contact?.email?.trim() ?? '';  
-  
+    const email     = dto?.contact?.email?.trim() ?? '';
+
     return !!(firstName && lastName && country && email);
   }
 
   saveProfileHeader(){
-    
+
     if(!this.canSaveEducation) return;
     this.userProfile.saveProfileHeaderInfo(this.currentUser.userId, this.profileHeaderDto).subscribe(
       (response : ProfileHeaderDto)=>{
         this.profileHeaderDto = response;
+        console.log("Profile info saved");
+            this.closeEditModal();
+            alert('Profile info saved.');
       },
       (error : HttpErrorResponse) =>{
-      console.log(error.message)
+                  alert(error.message);
+
       }
     );
-    console.log(this.profileHeaderDto);
-    this.closeEditModal();
-    alert('Profile info saved.');
+
   }
 }
