@@ -23,7 +23,7 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U icare -d ProNet"
+          --health-cmd "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -93,4 +93,12 @@ jobs:
             echo "Waiting for DB..."
             sleep 3
           done
-    
+      # ==========================
+      # DOCKER: Package into images
+      # (NO build inside docker)
+      # ==========================
+      - name: Build backend docker image
+        run: docker build -t pronet-backend:ci ProNetService
+
+      - name: Build frontend docker image
+        run: docker build -t pronet-frontend:ci ProNetUI
