@@ -2,17 +2,14 @@ name: Full CI Pipeline - ProNet-APP
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
-  build:
+  build-test-and-package:
     runs-on: ubuntu-latest
 
-    # -----------------------------------
-    # PostgreSQL service (CI database)
-    # -----------------------------------
     services:
       postgres:
         image: postgres:15
@@ -35,6 +32,12 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
+      # -----------------------------------
+      # Create version string (v0.<run_number>)
+      # -----------------------------------
+      - name: Set image version
+        run: echo "VERSION=v0.${{ github.run_number }}" >> $GITHUB_ENV
+
       # ===================================
       # FRONTEND: Angular (ProNetUI)
       # ===================================
@@ -50,6 +53,9 @@ jobs:
       - name: Build Angular app
         working-directory: ./ProNetUI
         run: npm run build -- --configuration production
+
+      - name: Show Angular dist output
+        run: ls -la ProNetUI/dist
 
       - name: Upload frontend artifact
         uses: actions/upload-artifact@v4
@@ -71,6 +77,14 @@ jobs:
         working-directory: ./ProNetService
         run: chmod +x gradlew
 
+      - name: Wait for PostgreSQL
+        run: |
+          for i in {1..10}; do
+            pg_isready -h localhost -U ${{ secrets.DB_USER }} -d ProNet && break
+            echo "Waiting for DB..."
+            sleep 3
+          done
+
       - name: Build & Test Spring Boot App
         working-directory: ./ProNetService
         env:
@@ -80,25 +94,55 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: ./gradlew clean build --no-daemon
 
+      - name: Show backend jar output
+        run: ls -la ProNetService/build/libs
+
       - name: Upload backend artifact
         uses: actions/upload-artifact@v4
         with:
           name: backend-jar
           path: ProNetService/build/libs/*.jar
 
-      - name: Wait for PostgreSQL
-        run: |
-          for i in {1..10}; do
-            pg_isready -h localhost -U ${{ secrets.DB_USER }} -d ProNet && break
-            echo "Waiting for DB..."
-            sleep 3
-          done
-      # ==========================
-      # DOCKER: Package into images
-      # (NO build inside docker)
-      # ==========================
-      - name: Build backend docker image
-        run: docker build -t pronet-backend:ci ProNetService
+      # ===================================
+      # DOCKER: Build images using VERSION directly
+      # (Pattern 2 = package only)
+      # ===================================
+      - name: Build backend docker image (versioned)
+        run: docker build -t pronet-backend:${{ env.VERSION }} ProNetService
 
-      - name: Build frontend docker image
-        run: docker build -t pronet-frontend:ci ProNetUI
+      - name: Build frontend docker image (versioned)
+        run: docker build -t pronet-frontend:${{ env.VERSION }} ProNetUI
+
+      # ===================================
+      # DOCKER HUB: login + tag + push
+      # - only push on main (not PR)
+      # ===================================
+      - name: Login to Docker Hub
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Tag & push images (VERSION + latest)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          VERSION: ${{ env.VERSION }}
+        run: |
+          # Your Docker Hub repos (preferred names)
+          FE_REPO=$USERNAME/pronet-frontend
+          BE_REPO=$USERNAME/pronet-backend
+
+          echo "Pushing version: $VERSION"
+          echo "Frontend repo: $FE_REPO"
+          echo "Backend repo:  $BE_REPO"
+
+          # FRONTEND: tag local -> DockerHub repo
+          docker tag pronet-frontend:$VERSION $FE_REPO:$VERSION
+          docker tag pronet-frontend:$VERSION $FE_REPO:latest
+          docker push $FE_REPO:$VERSION
+          docker push $FE_REPO:latest
+
+          # BACKEND: tag local -> DockerHub repo
+          docker tag pronet-backend:$VERSION $BE_REPO:$VERSION
+          docker tag pronet-backend:$VERSION $BE_REPO:latest
+          docker push $BE_REPO:$VERSION
+          docker push $BE_REPO:latest
