@@ -115,7 +115,7 @@ jobs:
 
       # ===================================
       # DOCKER HUB: login + tag + push
-      # - only push on main (not PR)
+      # - only push on main
       # ===================================
       - name: Login to Docker Hub
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
