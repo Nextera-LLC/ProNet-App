@@ -1,9 +1,8 @@
 FROM nginx:alpine
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copy the Angular output folder into nginx
-# IMPORTANT: Replace <appName> with your real dist folder name
-COPY dist/ProNetUI/ /usr/share/nginx/html/
+# ✅ Copy browser build output directly to nginx root
+COPY dist/ProNetUI/browser/ /usr/share/nginx/html/
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
