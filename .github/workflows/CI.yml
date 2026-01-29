@@ -105,7 +105,6 @@ jobs:
 
       # ===================================
       # DOCKER: Build images using VERSION directly
-      # (Pattern 2 = package only)
       # ===================================
       - name: Build backend docker image (versioned)
         run: docker build -t pronet-backend:${{ env.VERSION }} ProNetService
@@ -113,36 +112,66 @@ jobs:
       - name: Build frontend docker image (versioned)
         run: docker build -t pronet-frontend:${{ env.VERSION }} ProNetUI
 
+      - name: Verify docker images exist
+        run: |
+          docker images | grep -E "pronet-backend|pronet-frontend"
+
       # ===================================
-      # DOCKER HUB: login + tag + push
-      # - only push on main
+      # PUSH: Docker Hub + ACR
+      # - only push on main push
       # ===================================
+
+      # ---- Docker Hub login ----
       - name: Login to Docker Hub
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
-      - name: Tag & push images (VERSION + latest)
+      # ---- ACR (Azure Container Registery) login ----
+      - name: Login to Azure ACR
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: echo "${{ secrets.ACR_PASSWORD }}" | docker login "${{ secrets.ACR_LOGIN_SERVER }}" -u "${{ secrets.ACR_USERNAME }}" --password-stdin
+
+      # ---- Push to both registries ----
+      - name: Tag & push images to Docker Hub + ACR (VERSION + latest)
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
-          USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+          ACR: ${{ secrets.ACR_LOGIN_SERVER }}
           VERSION: ${{ env.VERSION }}
         run: |
-          # Your Docker Hub repos (preferred names)
-          FE_REPO=$USERNAME/pronet-frontend
-          BE_REPO=$USERNAME/pronet-backend
+          set -e
 
-          echo "Pushing version: $VERSION"
-          echo "Frontend repo: $FE_REPO"
-          echo "Backend repo:  $BE_REPO"
+          # Targets
+          DH_FE=$DOCKERHUB_USER/pronet-frontend
+          DH_BE=$DOCKERHUB_USER/pronet-backend
 
-          # FRONTEND: tag local -> DockerHub repo
-          docker tag pronet-frontend:$VERSION $FE_REPO:$VERSION
-          docker tag pronet-frontend:$VERSION $FE_REPO:latest
-          docker push $FE_REPO:$VERSION
-          docker push $FE_REPO:latest
+          ACR_FE=$ACR/pronet-frontend
+          ACR_BE=$ACR/pronet-backend
 
-          # BACKEND: tag local -> DockerHub repo
-          docker tag pronet-backend:$VERSION $BE_REPO:$VERSION
-          docker tag pronet-backend:$VERSION $BE_REPO:latest
-          docker push $BE_REPO:$VERSION
-          docker push $BE_REPO:latest
+          echo "VERSION: $VERSION"
+          echo "Docker Hub FE: $DH_FE | BE: $DH_BE"
+          echo "ACR       FE: $ACR_FE | BE: $ACR_BE"
+
+          # FRONTEND -> Docker Hub
+          docker tag pronet-frontend:$VERSION $DH_FE:$VERSION
+          docker tag pronet-frontend:$VERSION $DH_FE:latest
+          docker push $DH_FE:$VERSION
+          docker push $DH_FE:latest
+
+          # BACKEND -> Docker Hub
+          docker tag pronet-backend:$VERSION $DH_BE:$VERSION
+          docker tag pronet-backend:$VERSION $DH_BE:latest
+          docker push $DH_BE:$VERSION
+          docker push $DH_BE:latest
+
+          # FRONTEND -> ACR
+          docker tag pronet-frontend:$VERSION $ACR_FE:$VERSION
+          docker tag pronet-frontend:$VERSION $ACR_FE:latest
+          docker push $ACR_FE:$VERSION
+          docker push $ACR_FE:latest
+
+          # BACKEND -> ACR
+          docker tag pronet-backend:$VERSION $ACR_BE:$VERSION
+          docker tag pronet-backend:$VERSION $ACR_BE:latest
+          docker push $ACR_BE:$VERSION
+          docker push $ACR_BE:latest
