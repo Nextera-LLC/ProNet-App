@@ -1,0 +1,64 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: pronet-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pronet-network
+    restart: unless-stopped
+    # ✅ Production best practice: do NOT expose DB publicly
+    # For local debugging only, uncomment:
+    # ports:
+    #   - "5432:5432"
+
+  backend:
+    image: nextera2025/pronet-backend:${BACKEND_TAG}
+    container_name: pronet-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
+      SERVER_PORT: 8080
+      JWT_SECRET: ${JWT_SECRET}
+    ports:
+      - "8080:8080"
+    networks:
+      - pronet-network
+    restart: unless-stopped
+
+  frontend:
+    image: nextera2025/pronet-frontend:${FRONTEND_TAG}
+    container_name: pronet-frontend
+    depends_on:
+      - backend
+    environment:
+      API_URL: ${FRONTEND_API_URL}
+    ports:
+      - "4200:80"
+    networks:
+      - pronet-network
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+
+networks:
+  pronet-network:
+    driver: bridge
