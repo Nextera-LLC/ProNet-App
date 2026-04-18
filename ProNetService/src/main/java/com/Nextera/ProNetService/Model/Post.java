@@ -1,5 +1,7 @@
 package com.Nextera.ProNetService.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+
 public class Post {
 
     @Id
@@ -39,12 +42,15 @@ public class Post {
     @Column(nullable = false)
     private Visibility visibility =  Visibility.PUBLIC;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reaction> reactions;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Share> shares;
 
